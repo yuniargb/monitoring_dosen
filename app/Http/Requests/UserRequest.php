@@ -26,6 +26,7 @@ class UserRequest extends FormRequest
         $rules = [
             'nama' => 'required',
             'no_telp' => 'required|numeric',
+            'role' => 'required',
         ];
 
         if (request()->isMethod('post')) {
@@ -46,6 +47,7 @@ class UserRequest extends FormRequest
             'username'            => 'username',
             'email'            => 'email',
             'no_telp'            => 'nomor telfon',
+            'role'            => 'bagian',
             'password'            => 'password'
         ];
     }

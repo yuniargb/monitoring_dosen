@@ -15,13 +15,10 @@ class CreatePengajuanTable extends Migration
     {
         Schema::create('pengajuan', function (Blueprint $table) {
             $table->bigIncrements('id_pengajuan');
-            $table->text('foto_1');
-            $table->text('foto_2');
-            $table->text('foto_3');
-            $table->text('foto_4');
             $table->string('nama');
             $table->string('alamat');
             $table->string('nidn');
+            $table->string('jabatan_fungsional');
             $table->unsignedBigInteger('id_fakultas');
             $table->unsignedBigInteger('id_prodi');
             $table->boolean('status');

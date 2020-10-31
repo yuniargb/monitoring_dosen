@@ -8,12 +8,12 @@
             <div class="card-header">
                 <div class="card-head-row">
                     <div class="card-title">{{ $type ? 'Tambah' : 'Edit' }} {{ $title }}</div>
-                    <a href="/pengajuan/" class="btn btn-danger btn-sm">
+                    <!-- <a href="{{ url()->previous() }}" class="btn btn-danger btn-sm">
                         <span class="btn-label">
                                 <i class="fas fa-chevron-left"></i>
                             </span>
                         Kembali
-                    </a>
+                    </a> -->
                 </div>
             </div>
             <div class="card-body">
@@ -38,10 +38,15 @@
                     <div class="form-group">
                         <label for="nama">Nama</label>
                         <input required type="text" class="form-control" value="{{ !$type ? $data->nama : ''}}" name="nama" id="nama">
+                        <input required type="hidden" class="form-control" value="{{ url()->previous() }}" name="prevUrl" id="prevUrl">
                     </div>
                     <div class="form-group">
                         <label for="nidn">NIDN</label>
-                        <input required  type="text" class="form-control" value="{{ !$type ? $data->nidn : (auth()->user()->role == 3 ? auth()->user()->username : '')}}" name="nidn" id="nidn" {{ auth()->user()->role == 3 ? 'readonly' : ''}}>
+                        <input required  type="text" class="form-control" value="{{ !$type ? $data->nidn : (auth()->user()->role == 4 ? auth()->user()->username : '')}}" name="nidn" id="nidn" {{ auth()->user()->role == 4 ? 'readonly' : ''}}>
+                    </div>
+                    <div class="form-group">
+                        <label for="jabatan_fungsional">Jabatan Fungsional</label>
+                        <input required  type="text" class="form-control" value="{{ !$type ? $data->jabatan_fungsional : ''}}" name="jabatan_fungsional" id="jabatan_fungsional">
                     </div>
                     <div class="form-group">
                         <label for="id_fakultas">Fakultas</label>
@@ -66,19 +71,90 @@
                         <textarea name="alamat" id="alamat" cols="30" rows="10" class="form-control" required>{{ !$type ? $data->alamat : ''}}</textarea>
                     </div>
                     @php
-                    $i = 1;
-                    while($i <= 4){
-                        $ft = 'foto_' . $i;
+                    $i = 'a';
+                    while($i <= 'd'){
+                        $ft = 'bidang_' . $i;
                     @endphp
                     <div class="form-group">
-                        <label for="{{ $ft }}">Foto {{ $i }}</label>
-                        <input type="file" class="form-control" value="{{ !$type ? $data->$ft : ''}}" name="{{ $ft }}" id="{{ $ft }}">
+                        <label for="{{ $ft }}" class="text-capitalize">Bidang {{ $i }}</label>
+                        @if(!$type)
+                            @if($ft == 'bidang_a')
+                                @foreach ($bidang_a as $b)
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            {{ $b->dokumen }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" data-action="/api/pengajuan/dokumen/delete/{{ Crypt::encrypt($b->id_dokumen_pengajuan) }}" class="btn btn-danger btn-sm mb-2 btn-delt"
+                                                    data-toggle="tooltip" data-original-title="Hapus"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @elseif($ft == 'bidang_b')
+                                @foreach ($bidang_b as $b)
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            {{ $b->dokumen }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" data-action="/api/pengajuan/dokumen/delete/{{ Crypt::encrypt($b->id_dokumen_pengajuan) }}" class="btn btn-danger btn-sm mb-2 btn-delt"
+                                                    data-toggle="tooltip" data-original-title="Hapus"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @elseif($ft == 'bidang_c')
+                                @foreach ($bidang_c as $b)
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            {{ $b->dokumen }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" data-action="/api/pengajuan/dokumen/delete/{{ Crypt::encrypt($b->id_dokumen_pengajuan) }}" class="btn btn-danger btn-sm mb-2 btn-delt"
+                                                    data-toggle="tooltip" data-original-title="Hapus"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @elseif($ft == 'bidang_d')
+                                @foreach ($bidang_d as $b)
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            {{ $b->dokumen }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" data-action="/api/pengajuan/dokumen/delete/{{ Crypt::encrypt($b->id_dokumen_pengajuan) }}" class="btn btn-danger btn-sm mb-2 btn-delt"
+                                                    data-toggle="tooltip" data-original-title="Hapus"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        @endif
+                        <input type="file" class="form-control" value="{{ !$type ? $data->$ft : ''}}" name="{{ $ft }}[]" {{ !$type ? '' : 'required'}}>
                     </div>
+                    <div id="data-{{ $ft }}"></div>
+                    <button class="btn btn-primary mb-1 btn-sm text-right btn-{{ $ft }} text-capitalize" type="button"><i class="fas fa-plus"></i> Tambah Bidang {{ $i }}</button>
                     @php
                         $i++;
                     }                        
                     @endphp
-                    
+                    <div class="form-group">
+                        <label for="lainnya">Bidang Lainnya</label>
+                        @if(!$type)
+                        @foreach ($lainnya as $b)
+                            <div class="row">
+                                <div class="col-md-10">
+                                    {{ $b->dokumen }}
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" data-action="/api/pengajuan/dokumen/delete/{{ Crypt::encrypt($b->id_dokumen_pengajuan) }}" class="btn btn-danger btn-sm mb-2 btn-delt"
+                                            data-toggle="tooltip" data-original-title="Hapus"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        @endforeach
+                        @endif
+                        <input type="file" class="form-control" value="{{ !$type ? $data->lainnya : ''}}" name="lainnya[]" id="lainnya">
+                    </div>
+                    <div id="data-bidang_lainnya"></div>
+                    <button class="btn btn-primary mb-1 btn-sm text-right btn-bidang_lainnya" type="button"><i class="fas fa-plus"></i> Tambah Bidang Lainnya</button>
                     <div class="modal-footer">
                         
                         <button type="reset" class="btn btn-outline-danger">Reset</button>

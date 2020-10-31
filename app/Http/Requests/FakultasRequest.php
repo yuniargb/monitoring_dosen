@@ -25,6 +25,7 @@ class FakultasRequest extends FormRequest
     {
         $rules = [
             'nama_fakultas' => 'required',
+            'warna' => 'required',
         ];
 
         // if (request()->isMethod('post')) {
@@ -35,7 +36,7 @@ class FakultasRequest extends FormRequest
     public function attributes()
     {
         return [
-            'nama_fakultas'            => 'nama fakultas'
+            'nama_fakultas'            => 'nama fakultas',
         ];
     }
     public function messages()

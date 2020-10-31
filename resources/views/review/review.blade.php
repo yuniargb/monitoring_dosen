@@ -24,8 +24,8 @@
                                             <th>Nama</th>
                                             <th>Fakultas</th>
                                             <th>Prodi</th>
-                                            <th>Foto Pengajuan Dosen</th>
-                                            <th>Foto Pengajuan Review</th>
+                                            <th>Dokumen Pengajuan Dosen</th>
+                                            <th>Dokumen Pengajuan Fakultas</th>
                                             <th>Status</th>
                                             <th>Umur Hari</th>
                                             <th>Aksi</th>
@@ -40,50 +40,30 @@
                                             <td>{{ $sw->nama_fakultas }}</td>
                                             <td>{{ $sw->nama_prodi }}</td>
                                             <td>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_1 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 1</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_2 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 2</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_3 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 3</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_4 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 4</button>
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_a').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang A</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_b').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang B</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_c').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang C</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_d').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang D</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/lainnya').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Lainnya</button>
                                             </td>
                                             <td>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_1_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 1</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_2_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 2</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_3_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 3</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_4_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 4</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_5_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 6</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_6_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 6</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_7_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 7</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_8_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 8</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_9_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 9</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_10_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 10</button>
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/review/detailfile').'/'.$sw->id_review }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download</button>
                                             </td>
                                             <td>{!! $sw->status_text !!}</td>
                                             <td><p class="text-{{ $sw->umur <= 10 ? 'success' : ($sw->umur <= 20 ? 'warning' : 'danger') }}">{{ $sw->umur }} Hari</p></td>
@@ -91,10 +71,12 @@
                                             <td>
                                                 @if(auth()->user()->role == 1 || auth()->user()->role == 2)
                                                     <div class="mx-3">
+                                                        @if( $sw->status == 3 || $sw->status == 4)
                                                          <a href="/review/form/{{ Crypt::encrypt($sw->id_review) }}" class="btn btn-primary btn-round btn-sm">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        @if( $sw->status != 2)
+                                                        @endif
+                                                        @if( $sw->status == 0 || $sw->status == 1)
                                                         <form action="/api/review/delete/{{ Crypt::encrypt($sw->id_review) }}"
                                                             method="post" class="d-inline btn-del ">
                                                             @csrf
@@ -105,10 +87,10 @@
                                                         @endif
                                                     </div>
                                                 @endif
-                                                @if(auth()->user()->role == 1 || auth()->user()->role == 3)
+                                                @if(auth()->user()->role == 1 || auth()->user()->role == 3 || auth()->user()->role == 5 || auth()->user()->role == 6 || auth()->user()->role == 7)
                                                     <div class="mx-3">
                                                         
-                                                        <form action="/api/review/konfirmasi/{{ Crypt::encrypt($sw->id_review) }}"
+                                                        <form action="/review/konfirmasi/{{ Crypt::encrypt($sw->id_review) }}"
                                                             method="post" class="d-inline btn-confirm">
                                                             @csrf
                                                             @method('put')

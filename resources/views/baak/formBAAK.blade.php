@@ -36,7 +36,7 @@
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input required type="text" class="form-control" value="{{ !$type ? $data->username : ''}}" name="username" id="username" {{ !$type ? 'readonly' : ''}}>
-                        <input required type="hidden" class="form-control" value="3" name="role" id="role">
+                        
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -53,6 +53,17 @@
                     <div class="form-group">
                         <label for="no_telp">Nomor Telfon</label>
                         <input required type="text" class="form-control" value="{{ !$type ? $data->no_telp : ''}}" name="no_telp" id="no_telp">
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Bagian</label>
+                        <select class="form-control" name="role" id="role" required>
+                            <option value="" disabled>Pilih Bagian</option>
+                            <option value="3" {{ !$type ? ($data->role == 3 ? 'selected' : '') : ''}}>BAAK</option>
+                            <option value="5" {{ !$type ? ($data->role == 5 ? 'selected' : '') : ''}}>DUPAK</option>
+                            <option value="6" {{ !$type ? ($data->role == 6 ? 'selected' : '') : ''}}>PAK</option>
+                            <option value="7" {{ !$type ? ($data->role == 7 ? 'selected' : '') : ''}}>SK</option>
+                            
+                        </select>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" class="btn btn-outline-danger">Reset</button>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 use File;
+use Mail;
 use App\Pengajuan;
 use App\Prodi;
 use App\Fakultas;
 use App\Review;
+use App\User;
+use App\DokumenReview;
 use App\Http\Requests\PengajuanRequest;
 use App\Http\Requests\ReviewRequest;
 use App\Http\Requests\TolakRequest;
@@ -26,25 +29,40 @@ class ReviewController extends Controller
 
 
     public function index()
-    {
+    {   
+        
         if(auth()->user()->role == 1){
             $data = Review::getData();
-        }else if(auth()->user()->role == 2){
-            $data = Review::getData(null,auth()->user()->id_fakultas);
+            $cek = Review::where('status', 0);
+            $cek->update(['status' => 1]);
+        }else if(auth()->user()->role == 3 || auth()->user()->role == 5 || auth()->user()->role == 6 || auth()->user()->role == 7){
+            $data = Review::getData(null,null,auth()->user()->role);
+            if(auth()->user()->role == 3){
+                $cek = Review::where('status', 0);
+                $cek->update(['status' => 1]);
+            }else if(auth()->user()->role == 5){
+                $cek = Review::where('status_dupak', 0);
+                $cek->update(['status_dupak' => 1]);
+            }else if(auth()->user()->role == 6){
+                $cek = Review::where('status_pak', 0);
+                $cek->update(['status_pak' => 1]);
+            }else if(auth()->user()->role == 7){
+                $cek = Review::where('status_sk', 0);
+                $cek->update(['status_sk' => 1]);
+            }
         }else{
-            $data = Review::getData();
+            $data = Review::getData(null,auth()->user()->id_fakultas);
         }
-        
         return view('review.review', compact('data'))->with('title', $this->title);
     }
     public function konfirmasiView()
     {
         if(auth()->user()->role == 1){
             $data = Review::getDataKonfirmasi();
-        }else if(auth()->user()->role == 2){
-            $data = Review::getDataKonfirmasi(null,auth()->user()->id_fakultas);
+        }else if(auth()->user()->role == 3 || auth()->user()->role == 5 || auth()->user()->role == 6 || auth()->user()->role == 7){
+            $data = Review::getDataKonfirmasi(null,auth()->user()->id_fakultas,auth()->user()->role);
         }else{
-            $data = Review::getDataKonfirmasi();
+            $data = Review::getDataKonfirmasi(null,auth()->user()->id_fakultas);
         }
         
         return view('review.reviewKonfirmasi', compact('data'))->with('title', $this->title);
@@ -53,25 +71,67 @@ class ReviewController extends Controller
     {
         if(auth()->user()->role == 1){
             $data = Review::getDataTolak();
-        }else if(auth()->user()->role == 2){
-            $data = Review::getDataTolak(null,auth()->user()->id_fakultas);
+        }else if(auth()->user()->role == 3 || auth()->user()->role == 5 || auth()->user()->role == 6 || auth()->user()->role == 7){
+            $data = Review::getDataTolak(null,auth()->user()->id_fakultas,auth()->user()->role);
         }else{
-            $data = Review::getDataTolak();
+            $data = Review::getDataTolak(null,auth()->user()->id_fakultas);
         }
         
         return view('review.reviewTolak', compact('data'))->with('title', $this->title);
     }
 
-    
+    public function ditagguhkanView()
+    {
+        if(auth()->user()->role == 1){
+            $data = Review::getDataDitagguhkan();
+        }else if(auth()->user()->role == 2){
+            $data = Review::getDataDitagguhkan(null,auth()->user()->id_fakultas);
+        }else{
+            $data = Review::getDataDitagguhkan(auth()->user()->username);
+        }
+        
+        return view('review.reviewDitagguhkan', compact('data'))->with('title', $this->title);
+    }
 
-   
+    public function detail($id)
+    {
+        $cek = DokumenReview::where('id_review', $id)->get();
+        $data = [];
+        foreach($cek as $c){
+            $prt = array(
+                'path' => public_path()."/file/".$c->dokumen,
+                'filename' =>  $c->dokumen
+            );
+            array_push($data,$prt);
+        }
+        return $data;
+    }
+
+    function inputFileReview($fileNames,$request,$newId){
+        $files = $request->file($fileNames);
+        if($request->hasFile($fileNames)){
+            foreach ($files as $file) {
+                $resorce = $file;
+                $name   = $resorce->getClientOriginalExtension();
+                $newName = uniqid() . "." . $name;
+                
+                $resorce->move(\base_path() . "/public/file/", $newName);
+                $arr2 = array(
+                    'id_review' => $newId,
+                    'dokumen' => $newName
+                );
+                DokumenReview::create($arr2);
+            }
+        }
+    }
+
     public function edit($id)
     {
         $decrypt = Crypt::decrypt($id);
         $data = Review::find($decrypt);
-        
+        $basnat = DokumenReview::where('id_review', $decrypt)->get();
         $type = 1;
-        return view('review.formReview', compact('type','data'))->with('title', $this->title);    
+        return view('review.formReview', compact('type','data','basnat'))->with('title', $this->title);    
     }
     
     public function tolakForm($id)
@@ -87,25 +147,13 @@ class ReviewController extends Controller
     {
         $decrypt = Crypt::decrypt($id);
         $data = Review::find($decrypt);
-        $i = 1;
-        $arr =collect([]);
-        while($i <= 10){
-            $fto = 'foto_'.$i.'_r';
-            if($request->file($fto)){
-                $resorce = $request->file($fto);
-                $name   = $resorce->getClientOriginalExtension();
-                $newName = uniqid() . "." . $name;
-                \Image::make($resorce)->resize(300, 200);
-                $resorce->move(\base_path() . "/public/images/", $newName);
-                $image_path = public_path()."/images/".$data->$fto;
-                if(File::exists($image_path)) {
-                    unlink($image_path);
-                }
-                $arr->put($fto, $newName);
-            }
-            $i++;
-        }
 
+
+        $filenames = 'basenat';
+        $this->inputFileReview($filenames,$request,$decrypt);
+
+        $arr =collect([]);
+        $arr->put('status', 4);
         $request = new Request($request->all());
         $request->merge($arr->toArray());
 
@@ -113,10 +161,30 @@ class ReviewController extends Controller
 
 
         Session::flash('success', $this->title . ' berhasil diubah');
-        return Redirect::back();
+        return redirect($request->prevUrl);
     }
 
+     public function dashboard()
+    {
 
+        
+        if(auth()->user()->role == 1){
+            $dosen = User::getDosenJumlah();
+            $new = Review::reviewNew();
+            $review = Review::reviewInReview();
+            $konfirm = Review::reviewComplete();
+            $revisi = Review::reviewRevisi();
+            $ditagguhkan = Review::reviewDitagguhkan();
+        }else {
+            $dosen = User::getDosenJumlah(auth()->user()->id_fakultas,auth()->user()->role);
+            $new = Review::reviewNew(auth()->user()->id_fakultas,auth()->user()->role);
+            $review = Review::reviewInReview(auth()->user()->id_fakultas,auth()->user()->role);
+            $konfirm = Review::reviewComplete(auth()->user()->id_fakultas,auth()->user()->role);
+            $revisi = Review::reviewRevisi(auth()->user()->id_fakultas,auth()->user()->role);
+            $ditagguhkan = Review::reviewDitagguhkan(auth()->user()->id_fakultas,auth()->user()->role);
+        }
+        return view('review.reviewDashboard', compact('dosen','new','review','konfirm','revisi','ditagguhkan'))->with('title', $this->title);
+    }
     
     public function updateTolak(TolakRequest $request, $id)
     {
@@ -124,24 +192,82 @@ class ReviewController extends Controller
         $data = Review::find($decrypt);
         
         // $arr->put('status', 0);
-        $request = new Request($request->all());
-        $request->merge(['status' => 2, 'tanggal_tolak' => date('Y-m-d'),'tanggal_konfirmasi' => null]);
+        
+        if(auth()->user()->role == 5){
+            $data->status_dupak = 3;
+            $data->pesan_revisi_dupak = $request->pesan_revisi;
+            $data->tanggal_tolak_dupak = date('Y-m-d');
+            $bagian = 'DUPAK';
+            
+        }else if(auth()->user()->role == 6){
+            $data->status_pak = 3;
+            $data->pesan_revisi_pak = $request->pesan_revisi;
+            $data->tanggal_tolak_pak = date('Y-m-d');
+            $bagian = 'PAK';
+        }else if(auth()->user()->role == 7){
+            $data->status_sk = 3;
+            $data->pesan_revisi_sk = $request->pesan_revisi;
+            $data->tanggal_tolak_sk = date('Y-m-d');
+            $bagian = 'SK';
+        }else{
+            $data->status = 3;
+            $data->pesan_revisi = $request->pesan_revisi;
+            $data->tanggal_tolak = date('Y-m-d');
+            $bagian = 'BAAK';
+        }
+        $data->update();
 
-        $data->update($request->all());
+        $data2 = Pengajuan::find($data->id_pengajuan);
+        $user = User::where('username',$data2->nidn)->first();
+        $massg = 'Review ditolak oleh staff '. $bagian .', staff fakultas sedang memperbaiki';
+        Mail::send('email', ['nama' => $user->nama, 'pesan' => $massg], function ($message) use ($user)
+        {
+            $message->subject('Review');
+            $message->from('donotreply@ashiup.com', 'UNIVERSITAS MUHAMADIYAH TANGERANG');
+            $message->to($user->email);
+        });
         Session::flash('success', $this->title . ' berhasil ditolak');
-        return redirect('/review');
+        return redirect($request->prevUrl);
     }
     public function updateKonfirmasi(Request $request, $id)
     {
         $decrypt = Crypt::decrypt($id);
         $data = Review::find($decrypt);
         
-        // $arr->put('status', 0);
-        $request = new Request($request->all());
-        $request->merge(['status' => 1, 'tanggal_tolak' => null,'tanggal_konfirmasi' => date('Y-m-d')]);
+        if(auth()->user()->role == 5){
+            $data->status_dupak = 2;
+            $data->status_pak = 0;
+            $data->tanggal_konfirmasi_dupak = date('Y-m-d');
+            $bagian = 'DUPAK';
+        }else if(auth()->user()->role == 6){
+            $data->status_pak = 2;
+            $data->status_sk = 0;
+            $data->tanggal_konfirmasi_pak = date('Y-m-d');
+            $bagian = 'PAK';
+        }else if(auth()->user()->role == 7){
+            $data->status_sk = 2;
+            $data->tanggal_konfirmasi_sk = date('Y-m-d');
+            $bagian = 'SK';
+        }else{
+            $data->status = 2;
+            $data->status_dupak = 0;
+            $data->tanggal_konfirmasi = date('Y-m-d');
+            $bagian = 'BAAK';
+        }
 
-        $data->update($request->all());
-        Session::flash('success', $this->title . ' berhasil ditolak');
+        $data->update();
+        $data2 = Pengajuan::find($data->id_pengajuan);
+        $user = User::where('username',$data2->nidn)->first();
+        $massg = 'Review telah dikonfirm oleh '. $bagian;
+        Mail::send('email', ['nama' => $user->nama, 'pesan' => $massg], function ($message) use ($user)
+        {
+            $message->subject('Review');
+            $message->from('donotreply@ashiup.com', 'UNIVERSITAS MUHAMADIYAH TANGERANG');
+            $message->to($user->email);
+        });
+
+
+        Session::flash('success', $this->title . ' berhasil dikonfirmasi');
         return '/review';
     }
 
@@ -165,5 +291,22 @@ class ReviewController extends Controller
 
         Session::flash('success', $this->title . ' berhasil dihapus');
         return '/review';
+    }
+
+    public function destroyDokumen($id)
+    {
+        // dd($id);
+        $decrypt = Crypt::decrypt($id);
+        $data = DokumenReview::find($decrypt);
+        
+
+        $dokumen = public_path()."/file/". $data->dokumen;
+        if(File::exists($dokumen)) {
+            unlink($dokumen);
+        }
+        $data->delete();
+
+        Session::flash('success', $this->title . ' berhasil dihapus');
+        return '/';
     }
 }

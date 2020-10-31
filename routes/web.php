@@ -16,6 +16,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/login', 'AuthController@login')->name('login');
 Route::get('/logout', 'AuthController@logout')->name('logout');
+Route::get('/grafik', 'DashboardController@grafik');
 Route::post('/loginpost', 'AuthController@loginpost');
 Route::group(['middleware' => ['auth']], function () {
 Route::get('/', 'DashboardController@dashboard');
@@ -66,12 +67,21 @@ Route::group(['prefix' => 'admin','middleware' => ['auth','checkRole:1']], funct
     });
     
 });
-Route::group(['middleware' => ['auth','checkRole:1|2|4']], function () {
+Route::group(['middleware' => ['auth','checkRole:1|2|3|4|5|6|7']], function () {
     Route::get('/pengajuan', 'PengajuanController@index');
+    Route::group(['prefix' => 'pengajuan','middleware' => ['auth','checkRole:1|2']], function () {
+        Route::get('/dashboard', 'PengajuanController@dashboard');
+    });
+    Route::group(['prefix' => 'pengajuan','middleware' => ['auth','checkRole:1|2|3|4|5|6|7']], function () {
+        Route::get('/detailfile/{jenis}/{id}', 'PengajuanController@detail');
+        Route::get('/download/{filenames}', 'PengajuanController@downloadFile');
+    });
     Route::group(['prefix' => 'pengajuan','middleware' => ['auth','checkRole:1|2|4']], function () {
+        Route::get('/dosen', 'DosenController@index');
+        
         Route::get('/konfirmasi', 'PengajuanController@konfirmasiView');
         Route::get('/ditolak', 'PengajuanController@tolakView');
-        Route::get('/ditagguhkan', 'PengajuanController@taguh');
+        Route::get('/ditagguhkan', 'PengajuanController@ditagguhkanView');
         Route::get('/form', 'PengajuanController@create');
         Route::get('/form/{id}', 'PengajuanController@edit');
         Route::get('/form/tolak/{id}', 'PengajuanController@tolakForm');
@@ -82,18 +92,27 @@ Route::group(['middleware' => ['auth','checkRole:1|2|4']], function () {
         Route::put('/konfirmasi/{id}', 'PengajuanController@updateKonfirmasi');
     });
 });
-Route::group(['middleware' => ['auth','checkRole:1|2|3']], function () {
+Route::group(['middleware' => ['auth','checkRole:1|2|3|4|5|6|7']], function () {
     Route::get('/review', 'ReviewController@index');
-    Route::group(['prefix' => 'review','middleware' => ['auth','checkRole:1|2|3']], function () {
+    Route::group(['prefix' => 'review'], function () {
+    Route::get('/detailfile/{id}', 'ReviewController@detail');
+    });
+    Route::group(['prefix' => 'review','middleware' => ['auth','checkRole:1|3|5|6|7']], function () {
+        Route::get('/dashboard', 'ReviewController@dashboard');
+    });
+    Route::group(['prefix' => 'review','middleware' => ['auth','checkRole:1|2|3|5|6|7']], function () {
         Route::put('/konfirmasi/{id}', 'ReviewController@updateKonfirmasi');
         Route::get('/form/tolak/{id}', 'ReviewController@tolakForm');
         Route::put('/tolak/{id}', 'ReviewController@updateTolak');
         Route::get('/konfirmasi', 'ReviewController@konfirmasiView');
         Route::get('/ditolak', 'ReviewController@tolakView');
-        Route::get('/ditagguhkan', 'ReviewController@create');
+        Route::get('/ditagguhkan', 'ReviewController@ditagguhkanView');
         Route::get('/form/{id}', 'ReviewController@edit');
         Route::post('/add', 'ReviewController@store');
         Route::put('/update/{id}', 'ReviewController@update'); 
+        
+        Route::get('/dosen', 'DosenController@index');
+        
     });
 });
 

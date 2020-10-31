@@ -109,29 +109,51 @@
                 <hr class="sidebar-divider d-none d-md-block">
                 @endif
                 @if(auth()->user()->role == 1 || auth()->user()->role == 4 || auth()->user()->role == 2)
-                <li class="nav-item">
-                    <a class="nav-link" href="/pengajuan">
+                    @if(auth()->user()->role != 4)
+                    <li class="nav-item">
+                         <a class="nav-link" href="/pengajuan/dashboard">
+                            <i class="fas fa-fw fa-folder-open"></i>
+                        <span>Data Pengajuan</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pengajuan/konfirmasi">
+                            <i class="fas fa-fw fa-folder-open"></i>
+                            <span>Data Pengajuan Konfirmasi</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pengajuan/ditolak">
+                            <i class="fas fa-fw fa-folder-open"></i>
+                            <span>Data Pengajuan Ditolak</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pengajuan/ditagguhkan">
+                            <i class="fas fa-fw fa-folder-open"></i>
+                            <span>Data Pengajuan Tagguh</span></a>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                         <a class="nav-link" href="/pengajuan">
                         <i class="fas fa-fw fa-folder-open"></i>
                         <span>Data Pengajuan</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/pengajuan/konfirmasi">
-                        <i class="fas fa-fw fa-folder-open"></i>
-                        <span>Data Pengajuan Konfirmasi</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/pengajuan/ditolak">
-                        <i class="fas fa-fw fa-folder-open"></i>
-                        <span>Data Pengajuan Ditolak</span></a>
-                </li>
+                    </li>
+                    @endif
+                
                 <hr class="sidebar-divider d-none d-md-block">
                 @endif
-                @if(auth()->user()->role == 1 || auth()->user()->role == 3 || auth()->user()->role == 2)
-                <li class="nav-item">
-                    <a class="nav-link" href="/review">
-                        <i class="fas fa-fw fa-folder-open"></i>
-                        <span>Data Review</span></a>
-                </li>
+                @if(auth()->user()->role == 1 || auth()->user()->role == 2 || auth()->user()->role == 3 || auth()->user()->role == 5 || auth()->user()->role == 6 || auth()->user()->role == 7)
+                    @if(auth()->user()->role != 2)
+                    <li class="nav-item">
+                        <a class="nav-link" href="/review/dashboard">
+                            <i class="fas fa-fw fa-folder-open"></i>
+                            <span>Data Review</span></a>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="/review">
+                            <i class="fas fa-fw fa-folder-open"></i>
+                            <span>Data Review</span></a>
+                    </li>
+                    @endif
                 <li class="nav-item">
                     <a class="nav-link" href="/review/konfirmasi">
                         <i class="fas fa-fw fa-folder-open"></i>
@@ -142,12 +164,18 @@
                         <i class="fas fa-fw fa-folder-open"></i>
                         <span>Data Review Ditolak</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/review/ditagguhkan">
+                        <i class="fas fa-fw fa-folder-open"></i>
+                        <span>Data Review Tagguh</span></a>
+                </li>
                 <hr class="sidebar-divider d-none d-md-block">
                 <li class="nav-item">
                     <a class="nav-link" href="/laporan">
                         <i class="fas fa-fw fa-folder-open"></i>
                         <span>Laporan</span></a>
                 </li>
+                
                 @endif
                 
                 <!-- Sidebar Toggler (Sidebar) -->
@@ -178,6 +206,12 @@
                             $role = 'BAAK';
                             }elseif(auth()->user()->role == 4){
                             $role = 'Dosen';
+                            }elseif(auth()->user()->role == 5){
+                            $role = 'DUPAK';
+                            }elseif(auth()->user()->role == 6){
+                            $role = 'PIK';
+                            }elseif(auth()->user()->role == 7){
+                            $role = 'SK';
                             }else{
                             $role = 'None';
                             }
@@ -269,13 +303,14 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Data Gambar</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Download File</h5>
                     <button type="button" class="Tutup" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <img src="" alt="" id="datagambar" class="img-fluid">
+                    <!-- <img src="" alt="" id="datagambar" class="img-fluid"> -->
+                    <div id="detail-file"></div>
                 </div>
                 <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

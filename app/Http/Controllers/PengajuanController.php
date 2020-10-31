@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 use File;
+use URL;
+use Mail;
 use App\Pengajuan;
+use App\DokumenPengajuan;
+use App\DokumenReview;
+use App\User;
 use App\Prodi;
 use App\Fakultas;
 use App\Review;
@@ -27,17 +32,45 @@ class PengajuanController extends Controller
 
     public function index()
     {
-
+        
         if(auth()->user()->role == 1){
             $data = Pengajuan::getData();
+            $cek = Pengajuan::where('status', 0);
+            $cek->update(['status' => 1]);
         }else if(auth()->user()->role == 2){
-
             $data = Pengajuan::getData(null,auth()->user()->id_fakultas);
+            $cek = Pengajuan::where('status', 0)->where('id_fakultas', auth()->user()->id_fakultas);
+            $cek->update(['status' => 1]);
         }else{
-            $data = Pengajuan::getData(auth()->user()->username);
+            $data = Pengajuan::getDataFull(auth()->user()->username);
         }
+        if(auth()->user()->role == 4){
+            return view('pengajuan.pengajuanDashboardDosen', compact('data'))->with('title', $this->title);
+        }else{
+            return view('pengajuan.pengajuan', compact('data'))->with('title', $this->title);
+        }   
+    }
+
+    public function dashboard()
+    {
+        if(auth()->user()->role == 1){
+            $dosen = User::getDosenJumlah();
+            $new = Pengajuan::pengajuanNew();
+            $review = Pengajuan::pengajuanInReview();
+            $konfirm = Pengajuan::pengajuanComplete();
+            $revisi = Pengajuan::pengajuanRevisi();
+            $ditagguhkan = Pengajuan::pengajuanDitagguhkan();
+        }else if(auth()->user()->role == 2){
+            $dosen = User::getDosenJumlah(auth()->user()->id_fakultas);
+            $new = Pengajuan::pengajuanNew(auth()->user()->id_fakultas);
+            $review = Pengajuan::pengajuanInReview(auth()->user()->id_fakultas);
+            $konfirm = Pengajuan::pengajuanComplete(auth()->user()->id_fakultas);
+            $revisi = Pengajuan::pengajuanRevisi(auth()->user()->id_fakultas);
+            $ditagguhkan = Pengajuan::pengajuanDitagguhkan(auth()->user()->id_fakultas);
+        }
+        
               
-        return view('pengajuan.pengajuan', compact('data'))->with('title', $this->title);
+        return view('pengajuan.pengajuanDashboard', compact('dosen','new','review','konfirm','revisi','ditagguhkan'))->with('title', $this->title);
     }
 
     public function konfirmasiView()
@@ -64,6 +97,18 @@ class PengajuanController extends Controller
         
         return view('pengajuan.pengajuanTolak', compact('data'))->with('title', $this->title);
     }
+    public function ditagguhkanView()
+    {
+        if(auth()->user()->role == 1){
+            $data = Pengajuan::getDataDitagguhkan();
+        }else if(auth()->user()->role == 2){
+            $data = Pengajuan::getDataDitagguhkan(null,auth()->user()->id_fakultas);
+        }else{
+            $data = Pengajuan::getDataDitagguhkan(auth()->user()->username);
+        }
+        
+        return view('pengajuan.pengajuanDitagguhkan', compact('data'))->with('title', $this->title);
+    }
 
     public function create()
     {
@@ -73,24 +118,55 @@ class PengajuanController extends Controller
         return view('pengajuan.formPengajuan', compact('prodi','fakultas','type'))->with('title', $this->title);
     }
 
-    public function store(PengajuanRequest $request)
-    {
-        $i = 1; 
-        
-        $arr =collect([]);
-        while($i <= 4){
-            $fto = 'foto_'.$i;
-            if($request->file($fto)){
-                $resorce = $request->file($fto);
+    function inputFile($fileNames,$request,$newId){
+        $files = $request->file($fileNames);
+        if($request->hasFile($fileNames)){
+            foreach ($files as $file) {
+                $resorce = $file;
                 $name   = $resorce->getClientOriginalExtension();
                 $newName = uniqid() . "." . $name;
-                \Image::make($resorce)->resize(300, 200);
-                $resorce->move(\base_path() . "/public/images/", $newName);
+                
+                $resorce->move(\base_path() . "/public/file/", $newName);
+                $arr2 = array(
+                    'id_pengajuan' => $newId,
+                    'dokumen' => $newName,
+                    'jenis' => $fileNames,
+                );
+                DokumenPengajuan::create($arr2);
             }
-            $arr->put($fto, $newName);
+        }
+    }
+    function inputFileReview($fileNames,$request,$newId){
+        $files = $request->file($fileNames);
+        if($request->hasFile($fileNames)){
+            foreach ($files as $file) {
+                $resorce = $file;
+                $name   = $resorce->getClientOriginalExtension();
+                $newName = uniqid() . "." . $name;
+                
+                $resorce->move(\base_path() . "/public/file/", $newName);
+                $arr2 = array(
+                    'id_review' => $newId,
+                    'dokumen' => $newName
+                );
+                DokumenReview::create($arr2);
+            }
+        }
+    }
+    public function store(PengajuanRequest $request)
+    {
+        $newId = date('dmYhis');
+        $i = 'a';
+        while($i <= 'd'){
+            $filenames = 'bidang_'. $i;
+            $this->inputFile($filenames,$request,$newId);
             $i++;
         }
+        $filenames = 'lainnya';
+        $this->inputFile($filenames,$request,$newId);
+        $arr =collect([]);
         $arr->put('status', 0);
+        $arr->put('id_pengajuan', $newId);
         $request = new Request($request->all());
         $request->merge($arr->toArray());
 
@@ -102,21 +178,41 @@ class PengajuanController extends Controller
     }
 
   
-    public function show($id)
+    public function detail($jenis,$id)
     {
-        //
+        $cek = DokumenPengajuan::where('id_pengajuan', $id)->where('jenis',$jenis)->get();
+        $data = [];
+        foreach($cek as $c){
+            $prt = array(
+                'path' => public_path()."/file/".$c->dokumen,
+                'filename' =>  $c->dokumen
+            );
+            array_push($data,$prt);
+        }
+        return $data;
     }
 
-   
+    public function downloadFile($filenames){
+        return response()->download(public_path('/file/'.$filenames));
+    }
     public function edit($id)
     {
         $decrypt = Crypt::decrypt($id);
         $data = Pengajuan::find($decrypt);
-        
+        $bidang_a = DokumenPengajuan::where('id_pengajuan', $decrypt)
+        ->where('jenis', 'bidang_a')->get();
+        $bidang_b = DokumenPengajuan::where('id_pengajuan', $decrypt)
+        ->where('jenis', 'bidang_b')->get();
+        $bidang_c = DokumenPengajuan::where('id_pengajuan', $decrypt)
+        ->where('jenis', 'bidang_c')->get();
+        $bidang_d = DokumenPengajuan::where('id_pengajuan', $decrypt)
+        ->where('jenis', 'bidang_d')->get();
+        $lainnya = DokumenPengajuan::where('id_pengajuan', $decrypt)
+        ->where('jenis', 'lainnya')->get();
         $prodi = Prodi::all();
         $fakultas = Fakultas::all();
         $type = 0;
-        return view('pengajuan.formPengajuan', compact('type','data','prodi','fakultas'))->with('title', $this->title);
+        return view('pengajuan.formPengajuan', compact('type','data','prodi','fakultas','bidang_a','bidang_b','bidang_c','bidang_d','lainnya'))->with('title', $this->title);
     }
     public function konfirmasiForm($id)
     {
@@ -140,33 +236,28 @@ class PengajuanController extends Controller
         $decrypt = Crypt::decrypt($id);
         $data = Pengajuan::find($decrypt);
         
-        $i = 1;
-        $arr =collect([]);
-        while($i <= 4){
-            $fto = 'foto_'.$i;
-            if($request->file($fto)){
-                $resorce = $request->file($fto);
-                $name   = $resorce->getClientOriginalExtension();
-                $newName = uniqid() . "." . $name;
-                \Image::make($resorce)->resize(300, 200);
-                $resorce->move(\base_path() . "/public/images/", $newName);
-                $image_path = public_path()."/images/".$data->$fto;
-                if(File::exists($image_path)) {
-                    unlink($image_path);
-                }
-            }else{
-                $newName = $data->$fto;
-            }
-            $arr->put($fto, $newName);
+        $i = 'a';
+        while($i <= 'd'){
+            $filenames = 'bidang_'. $i;
+            $this->inputFile($filenames,$request,$decrypt);
             $i++;
         }
-        // $arr->put('status', 0);
+        $filenames = 'lainnya';
+        $this->inputFile($filenames,$request,$decrypt);
+        
+        $arr =collect([]);
+        $arr->put('status', 4);
         $request = new Request($request->all());
         $request->merge($arr->toArray());
 
         $data->update($request->all());
-        Session::flash('success', $this->title . ' berhasil diubah');
-        return Redirect::back();
+        Session::flash('success', $this->title . ' berhasil direvisi');
+        $links = session()->has('links') ? session('links') : [];
+        $currentLink = request()->path(); // Getting current URI like 'category/books/'
+        array_unshift($links, $currentLink); // Putting it in the beginning of links array
+        session(['links' => $links]); // Saving links array to the session
+        
+        return redirect($request->prevUrl);
     }
 
 
@@ -174,31 +265,32 @@ class PengajuanController extends Controller
     {
         $decrypt = Crypt::decrypt($id);
         $data = Pengajuan::find($decrypt);
-        $data->update(['status' => 1, 'tanggal_konfirmasi' => date('Y-m-d'), 'tanggal_tolak' => null]);
-        $i = 1;
+        $data->update(['status' => 2, 'tanggal_konfirmasi' => date('Y-m-d')]);
+        
+        $newId = date('dmYhis');
+        
+        $filenames = 'basenat';
+        $this->inputFileReview($filenames,$request,$newId);
+            
         $arr =collect([]);
-        while($i <= 10){
-            $fto = 'foto_'.$i.'_r';
-            if($request->file($fto)){
-                $resorce = $request->file($fto);
-                $name   = $resorce->getClientOriginalExtension();
-                $newName = uniqid() . "." . $name;
-                \Image::make($resorce)->resize(300, 200);
-                $resorce->move(\base_path() . "/public/images/", $newName);
-            }
-            $arr->put($fto, $newName);
-            $i++;
-        }
         $arr->put('status', 0);
+        $arr->put('id_review', $newId);
         $arr->put('id_pengajuan', $decrypt);
         $request = new Request($request->all());
         $request->merge($arr->toArray());
 
         Review::create($request->all());
 
-
+        $user = User::where('username',$data->nidn)->first();
+        $massg = 'Pengajuan anda telah dikonfirm oleh staf';
+        Mail::send('email', ['nama' => $user->nama, 'pesan' => $massg], function ($message) use ($user)
+        {
+            $message->subject('Pengajuan');
+            $message->from('donotreply@ashiup.com', 'UNIVERSITAS MUHAMADIYAH TANGERANG');
+            $message->to($user->email);
+        });
         Session::flash('success', $this->title . ' berhasil diconfirm');
-        return redirect('/pengajuan');
+        return redirect($request->prevUrl);
     }
     public function updateTolak(TolakRequest $request, $id)
     {
@@ -207,11 +299,20 @@ class PengajuanController extends Controller
         
         // $arr->put('status', 0);
         $request = new Request($request->all());
-        $request->merge(['status' => 2, 'tanggal_tolak' => date('Y-m-d'),'tanggal_konfirmasi' => null]);
+        $request->merge(['status' => 3, 'tanggal_tolak' => date('Y-m-d'),'tanggal_konfirmasi' => null]);
 
         $data->update($request->all());
+
+        $user = User::where('username',$data->nidn)->first();
+        $massg = 'Pengajuan anda telah ditolak oleh staf, silahkan lakukan revisi';
+        Mail::send('email', ['nama' => $user->nama, 'pesan' => $massg], function ($message) use ($user)
+        {
+            $message->subject('Pengajuan');
+            $message->from('donotreply@ashiup.com', 'UNIVERSITAS MUHAMADIYAH TANGERANG');
+            $message->to($user->email);
+        });
         Session::flash('success', $this->title . ' berhasil ditolak');
-        return redirect('/pengajuan');
+        return redirect($request->prevUrl);
     }
 
     public function destroy($id)
@@ -224,7 +325,7 @@ class PengajuanController extends Controller
         $i = 1;
         while($i <= 4){
             $fto = 'foto_'.$i;
-            $image_path = public_path()."/images/".$data->$fto;
+            $image_path = public_path()."/file/".$data->$fto;
             if(File::exists($image_path)) {
                 unlink($image_path);
             }
@@ -234,5 +335,21 @@ class PengajuanController extends Controller
 
         Session::flash('success', $this->title . ' berhasil dihapus');
         return '/pengajuan';
+    }
+    public function destroyDokumen($id)
+    {
+        // dd($id);
+        $decrypt = Crypt::decrypt($id);
+        $data = DokumenPengajuan::find($decrypt);
+        
+
+        $dokumen = public_path()."/file/". $data->dokumen;
+        if(File::exists($dokumen)) {
+            unlink($dokumen);
+        }
+        $data->delete();
+
+        Session::flash('success', $this->title . ' berhasil dihapus');
+        return '/';
     }
 }

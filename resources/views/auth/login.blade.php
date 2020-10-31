@@ -59,6 +59,10 @@
                                     <button type="submit" class="btn btn-danger btn-user btn-block">
                                         Login
                                     </button>
+                                    <hr>
+                                    <a href="/grafik" class="btn btn-secondary btn-user btn-block">
+                                        Grafik
+                                    </a>
                                 </form>
                             </div>
                         </div>

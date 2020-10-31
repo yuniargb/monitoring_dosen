@@ -41,10 +41,10 @@
                                             <td>{{ $sw->nama_fakultas }}</td>
                                             <td>
                                                 <div class="row">
-                                                    <a href="/admin/prodi/form/{{ Crypt::encrypt($sw->id_fakultas) }}" class="btn btn-primary btn-round btn-sm">
+                                                    <a href="/admin/prodi/form/{{ Crypt::encrypt($sw->id_prodi) }}" class="btn btn-primary btn-round btn-sm">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
-                                                    <form action="/api/admin/prodi/delete/{{ Crypt::encrypt($sw->id_fakultas) }}"
+                                                    <form action="/api/admin/prodi/delete/{{ Crypt::encrypt($sw->id_prodi) }}"
                                                         method="post" class="d-inline btn-del">
                                                         @csrf
                                                         @method('delete')

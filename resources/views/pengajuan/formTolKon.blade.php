@@ -8,7 +8,7 @@
             <div class="card-header">
                 <div class="card-head-row">
                     <div class="card-title">{{ $type ? 'Konfirmasi' : 'Tolak'  }} {{ $title }}</div>
-                    <a href="/pengajuan/" class="btn btn-danger btn-sm">
+                    <a href="{{ url()->previous() }}" class="btn btn-danger btn-sm">
                         <span class="btn-label">
                                 <i class="fas fa-chevron-left"></i>
                             </span>
@@ -30,21 +30,27 @@
                     @csrf
                     @method('put')
                    
-
+                    <input required type="hidden" class="form-control" value="{{ url()->previous() }}" name="prevUrl" id="prevUrl">
                     @if($type)
-                        @php
-                        $i = 1;
-                        while($i <= 10){
-                            $ft = 'foto_' . $i .'_r';
-                        @endphp
-                        <div class="form-group">
-                            <label for="{{ $ft }}">Foto {{ $i }}</label>
-                            <input type="file" class="form-control" value="{{ !$type ? $data->$ft : ''}}" name="{{ $ft }}" id="{{ $ft }}">
-                        </div>
-                        @php
-                            $i++;
-                        }                        
-                        @endphp
+                       <div class="form-group">
+                        <label for="basnat">BA SENAT</label>
+                        @if(!$type)
+                        @foreach ($basnat as $b)
+                            <div class="row">
+                                <div class="col-md-10">
+                                    {{ $b->dokumen }}
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" data-action="/api/review/dokumen/delete/{{ Crypt::encrypt($b->id_dokumen_review) }}" class="btn btn-danger btn-sm mb-2 btn-delt"
+                                            data-toggle="tooltip" data-original-title="Hapus"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        @endforeach
+                        @endif
+                        <input type="file" class="form-control" name="basenat[]" id="basnat" required>
+                    </div>
+                    <div id="data-ba_senat"></div>
+                    <button class="btn btn-primary mb-1 btn-sm text-right btn-ba_senat" type="button"><i class="fas fa-plus"></i> Tambah BA SENAT</button>
                     @else
                         <div class="form-group">
                             <label for="pesan_revisi">Pesan</label>

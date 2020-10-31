@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class Fakultas extends Model
 {
     protected $fillable = [
-        'nama_fakultas'
+        'nama_fakultas','warna'
     ];
     protected $primaryKey = 'id_fakultas';
     protected $table = 'fakultas';

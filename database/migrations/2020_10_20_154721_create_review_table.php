@@ -16,20 +16,22 @@ class CreateReviewTable extends Migration
         Schema::create('review', function (Blueprint $table) {
             $table->bigIncrements('id_review');
             $table->unsignedBigInteger('id_pengajuan');
-            $table->text('foto_1_r');
-            $table->text('foto_2_r');
-            $table->text('foto_3_r');
-            $table->text('foto_4_r');
-            $table->text('foto_5_r');
-            $table->text('foto_6_r');
-            $table->text('foto_7_r');
-            $table->text('foto_8_r');
-            $table->text('foto_9_r');
-            $table->text('foto_10_r');
-            $table->boolean('status');
+            $table->boolean('status')->nullable();
+            $table->boolean('status_dupak')->nullable();
+            $table->boolean('status_pak')->nullable();
+            $table->boolean('status_sk')->nullable();
             $table->string('pesan_revisi')->nullable();
             $table->date('tanggal_tolak')->nullable();
             $table->date('tanggal_konfirmasi')->nullable();
+            $table->string('pesan_revisi_dupak')->nullable();
+            $table->date('tanggal_tolak_dupak')->nullable();
+            $table->date('tanggal_konfirmasi_dupak')->nullable();
+            $table->string('pesan_revisi_pak')->nullable();
+            $table->date('tanggal_tolak_pak')->nullable();
+            $table->date('tanggal_konfirmasi_pak')->nullable();
+            $table->string('pesan_revisi_sk')->nullable();
+            $table->date('tanggal_tolak_sk')->nullable();
+            $table->date('tanggal_konfirmasi_sk')->nullable();
             $table->timestamps();
         });
     }

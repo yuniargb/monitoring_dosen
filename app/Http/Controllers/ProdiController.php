@@ -69,9 +69,9 @@ class ProdiController extends Controller
 
     public function destroy($id)
     {
-        // dd($id);
         $decrypt = Crypt::decrypt($id);
         $data = Prodi::find($decrypt);
+   
         $data->delete();
 
         Session::flash('success', $this->title . ' Prodi berhasil dihapus');

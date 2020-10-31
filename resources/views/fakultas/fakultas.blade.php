@@ -29,6 +29,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama</th>
+                                            <th>Warna</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -37,7 +38,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $sw->nama_fakultas }}</td>
-                                            
+                                            <td>{{ $sw->warna }}</td>
                                             <td>
                                                 <div class="row">
                                                     <a href="/admin/fakultas/form/{{ Crypt::encrypt($sw->id_fakultas) }}" class="btn btn-primary btn-round btn-sm">

@@ -25,8 +25,8 @@
                                             <th>Nama</th>
                                             <th>Fakultas</th>
                                             <th>Prodi</th>
-                                            <th>Foto Pengajuan Dosen</th>
-                                            <th>Foto Pengajuan Review</th>
+                                            <th>Dokumen Pengajuan Dosen</th>
+                                            <th>Dokumen Pengajuan Review</th>
                                             <th>Tanggal Konfirmasi</th>
                                             <th>Status</th>
                                             <th>Umur</th>
@@ -40,51 +40,31 @@
                                             <td>{{ $sw->nama }}</td>
                                             <td>{{ $sw->nama_fakultas }}</td>
                                             <td>{{ $sw->nama_prodi }}</td>
-                                            <td>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_1 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 1</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_2 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 2</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_3 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 3</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_4 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 4</button>
+                                             <td>
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_a').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang A</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_b').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang B</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_c').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang C</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_d').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Bidang D</button>
+                                           
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/lainnya').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download Lainnya</button>
                                             </td>
                                             <td>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_1_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 1</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_2_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 2</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_3_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 3</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_4_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 4</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_5_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 6</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_6_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 6</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_7_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 7</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_8_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 8</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_9_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 9</button>
-                                                <button class="btn btn-primary detail-bukti mt-3 btn-sm"
-                                                    data-image="/images/{{ $sw->foto_10_r }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil Foto 10</button>
+                                                <button class="btn btn-primary detail-bukti btn-sm mb-2"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/review/detailfile').'/'.$sw->id_review }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download</button>
                                             </td>
                                             <td>{{ date('d-m-Y', strtotime($sw->tanggal_konfirmasi)) }}</td>
                                             <td>{!! $sw->status_text !!}</td>

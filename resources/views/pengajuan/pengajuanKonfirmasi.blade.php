@@ -25,10 +25,12 @@
                                             <th>Nama</th>
                                             <th>Fakultas</th>
                                             <th>Prodi</th>
-                                            <th>Foto 1</th>
-                                            <th>Foto 2</th>
-                                            <th>Foto 3</th>
-                                            <th>Foto 4</th>
+                                            <th>bidang 1</th>
+                                            <th>bidang 2</th>
+                                            <th>bidang 3</th>
+                                            <th>bidang 4</th>
+                                            <th>bidang lainnya</th>
+                                            <th>Tanggal Pengajuan</th>
                                             <th>Tanggal Konfirmasi</th>
                                             <th>Status</th>
                                             <th>Umur</th>
@@ -44,27 +46,33 @@
                                             <td>{{ $sw->nama_prodi }}</td>
                                             <td>
                                                 <button class="btn btn-primary detail-bukti btn-sm"
-                                                    data-image="/images/{{ $sw->foto_1 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil</button>
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_a').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download</button>
                                             </td>
                                             <td>
                                                 <button class="btn btn-primary detail-bukti btn-sm"
-                                                    data-image="/images/{{ $sw->foto_2 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil</button>
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_b').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download</button>
                                             </td>
                                             <td>
                                                 <button class="btn btn-primary detail-bukti btn-sm"
-                                                    data-image="/images/{{ $sw->foto_3 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil</button>
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_c').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download</button>
                                             </td>
                                             <td>
                                                 <button class="btn btn-primary detail-bukti btn-sm"
-                                                    data-image="/images/{{ $sw->foto_4 }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Tampil</button>
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/bidang_d').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download</button>
                                             </td>
+                                            <td>
+                                                <button class="btn btn-primary detail-bukti btn-sm"
+                                                    data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/pengajuan/detailfile/lainnya').'/'.$sw->id_pengajuan }}" data-toggle="modal"
+                                                    data-target="#exampleModal">Download</button>
+                                            </td>
+                                            <td>{{ date('d-m-Y', strtotime($sw->created_at)) }}</td>
                                             <td>{{ date('d-m-Y', strtotime($sw->tanggal_konfirmasi)) }}</td>
                                             <td>
-                                                {{ $sw->status }}
+                                                {!! $sw->status !!}
                                             </td>
                                             <td><p class="text-{{ $sw->umur <= 10 ? 'success' : ($sw->umur <= 20 ? 'warning' : 'danger') }}">{{ $sw->umur }} Hari</p></td>
                                         </tr>

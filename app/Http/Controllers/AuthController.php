@@ -28,10 +28,12 @@ class AuthController extends Controller
         if (Auth::attempt(array('username' => $request->username, 'password' => $request->password))) {
             if (auth()->user()->role == 1) {
                 return redirect('/admin/prodi');
-            } else if (auth()->user()->role == 2 || auth()->user()->role == 4) {
+            } else if (auth()->user()->role == 4 ) {
                 return redirect('/pengajuan');
+            } else if (auth()->user()->role == 2) {
+                return redirect('/pengajuan/dashboard');
             } else {
-                return redirect('/review');
+                return redirect('/review/dashboard');
             }
         }else{
             Session::flash('failed', 'password salah');

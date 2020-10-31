@@ -28,14 +28,17 @@ class PengajuanRequest extends FormRequest
             'alamat' => 'required',
             'id_fakultas' => 'required',
             'id_prodi' => 'required',
+            'jabatan_fungsional' => 'required',
             'nidn' => 'required|numeric',
         ];
 
         if (request()->isMethod('post')) {
-            $rules['foto_1'] = 'required|image';
-            $rules['foto_2'] = 'required|image';
-            $rules['foto_3'] = 'required|image';
-            $rules['foto_4'] = 'required|image';
+        
+            $rules['bidang_a.*'] = 'required|mimes:doc,docx,pdf';
+            $rules['bidang_b.*'] = 'required|mimes:doc,docx,pdf';
+            $rules['bidang_c.*'] = 'required|mimes:doc,docx,pdf';
+            $rules['bidang_d.*'] = 'required|mimes:doc,docx,pdf';
+            $rules['lainnya.*'] = 'required|mimes:doc,docx,pdf';
         }
         return $rules;
     }
@@ -47,7 +50,12 @@ class PengajuanRequest extends FormRequest
             'id_fakultas'       => 'fakultas',
             'id_prodi'          => 'prodi',
             'nidn'              => 'nidn',
-            
+            'jabatan_fungsional'              => 'jabatan fungsional',
+            'bidan_a'              => 'bidang a',
+            'bidang_b'              => 'bidang b',
+            'bidang_c'              => 'bidang c',
+            'bidang_d'              => 'bidang d',
+            'lainnya'              => 'bidang lainnya',
         ];
     }
     public function messages()
@@ -55,7 +63,9 @@ class PengajuanRequest extends FormRequest
         return [
             'required' => ':attribute ini wajib diisi',
             'image' => ':attribute ini wajib gambar',
-            'numeric' => ':attribute harus angka'
+            'numeric' => ':attribute harus angka',
+            'mimes' => ':attribute harus berupa doc,docx,pdf',
+            'min' => ':attribute minimal 4'
         ];
     }
 }

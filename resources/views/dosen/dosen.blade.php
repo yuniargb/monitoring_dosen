@@ -8,6 +8,7 @@
             <div class="card-header">
                 <div class="card-head-row">
                     <div class="card-title">Daftar {{ $title }}</div>
+                    @if(auth()->user()->role == 1)
                     <div class="card-tools">
                         <a href="/admin/dosen/form/" class="btn btn-primary btn-round btn-sm">
                             <span class="btn-label">
@@ -16,6 +17,7 @@
                             Tambah {{ $title }}
                         </a>
                     </div>
+                    @endif
                 </div>
             </div>
             <div class="card-body">
@@ -32,7 +34,9 @@
                                             <th>Email</th>
                                             <th>Nama</th>
                                             <th>Nomor Telfon</th>
+                                            @if(auth()->user()->role == 1)
                                             <th>Aksi</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -43,6 +47,7 @@
                                             <td>{{ $sw->email }}</td>
                                             <td>{{ $sw->nama }}</td>
                                             <td>{{ $sw->no_telp }}</td>
+                                            @if(auth()->user()->role == 1)
                                             <td>
                                                 <div class="row">
                                                     <a href="/admin/dosen/form/{{ Crypt::encrypt($sw->id) }}" class="btn btn-primary btn-round btn-sm">
@@ -58,6 +63,7 @@
                                                     </form>
                                                 </div>
                                             </td>
+                                            @endif
                                         </tr>
                                         @endforeach
                                     </tbody>

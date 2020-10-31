@@ -32,6 +32,7 @@
                                             <th>Email</th>
                                             <th>Nama</th>
                                             <th>Nomor Telfon</th>
+                                            <th>Bagian/th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -43,6 +44,7 @@
                                             <td>{{ $sw->email }}</td>
                                             <td>{{ $sw->nama }}</td>
                                             <td>{{ $sw->no_telp }}</td>
+                                            <td>{{ $sw->role }}</td>
                                             <td>
                                                 <div class="row">
                                                     <a href="/admin/baak/form/{{ Crypt::encrypt($sw->id) }}" class="btn btn-primary btn-round btn-sm">

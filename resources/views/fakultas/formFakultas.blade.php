@@ -37,6 +37,10 @@
                         <label for="nama_fakultas">Nama Fakultas</label>
                         <input required type="text" class="form-control" value="{{ !$type ? $data->nama_fakultas : ''}}" name="nama_fakultas" id="nama_fakultas">
                     </div>
+                    <div class="form-group">
+                        <label for="warna">Warna Fakultas</label>
+                        <input required type="color" class="form-control" value="{{ !$type ? $data->warna : ''}}" name="warna" id="warna">
+                    </div>
                     <div class="modal-footer">
                         
                         <button type="reset" class="btn btn-outline-danger">Reset</button>
