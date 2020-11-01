@@ -122,9 +122,9 @@ if (ctx != null) {
                 labels: JSON.parse(ctx2.getAttribute('data-x')),
                 datasets: [{
                     label: "Revenue",
-                    backgroundColor: "#4e73df",
-                    hoverBackgroundColor: "#2e59d9",
-                    borderColor: "#4e73df",
+                    backgroundColor: JSON.parse(ctx2.getAttribute('data-l')),
+                    hoverBackgroundColor: JSON.parse(ctx2.getAttribute('data-l')),
+                    borderColor: JSON.parse(ctx2.getAttribute('data-l')),
                     data: JSON.parse(ctx2.getAttribute('data-y')),
                 }],
             },

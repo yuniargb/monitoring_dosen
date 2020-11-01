@@ -91,7 +91,7 @@
                                                             method="post" class="d-inline btn-del " >
                                                             @csrf
                                                             @method('delete')
-                                                            <button type="button" class="btn btn-danger btn-sm btn-dels"
+                                                            <button type="submit" class="btn btn-danger btn-sm"
                                                                 data-toggle="tooltip" data-original-title="Hapus"><i class="fas fa-trash"></i></button>
                                                         </form>
                                                         @endif

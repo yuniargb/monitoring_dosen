@@ -32,7 +32,7 @@
                                             <th>Email</th>
                                             <th>Nama</th>
                                             <th>Nomor Telfon</th>
-                                            <th>Bagian/th>
+                                            <th>Bagian</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>

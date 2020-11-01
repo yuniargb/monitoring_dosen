@@ -23,6 +23,7 @@ Route::delete('/admin/admin/delete/{id}', 'AdminController@destroy');
 Route::delete('/admin/baak/delete/{id}', 'BAAKController@destroy');
 Route::delete('/admin/staf/delete/{id}', 'StafController@destroy');
 Route::delete('/pengajuan/delete/{id}', 'PengajuanController@destroy');
+Route::delete('/review/delete/{id}', 'ReviewController@destroy');
 Route::delete('/pengajuan/dokumen/delete/{id}', 'PengajuanController@destroyDokumen');
 Route::delete('/review/dokumen/delete/{id}', 'ReviewController@destroyDokumen');
 Route::put('/pengajuan/confirm/{id}', 'PengajuanController@confirm');

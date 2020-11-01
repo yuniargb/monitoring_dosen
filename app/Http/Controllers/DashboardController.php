@@ -26,11 +26,13 @@ class DashboardController extends Controller
         }
         $x2 = [];
         $y2 = [];
+        $l2 = [];
         foreach ($fakultas as $d) {
             array_push($x2, $d->nama_fakultas);
             array_push($y2,$d->jumlah);
+            array_push($l2,$d->warna);
         }
-         return view('grafik', compact('x','y','x2','y2'));
+         return view('grafik', compact('x','y','x2','y2','l2'));
     }
 
 }

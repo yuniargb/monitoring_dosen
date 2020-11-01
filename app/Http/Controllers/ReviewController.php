@@ -275,19 +275,19 @@ class ReviewController extends Controller
     {
         // dd($id);
         $decrypt = Crypt::decrypt($id);
-        $data = Pengajuan::find($decrypt);
+        $data = Review::find($decrypt);
         
 
-        $i = 1;
-        while($i <= 4){
-            $fto = 'foto_'.$i;
-            $image_path = public_path()."/images/".$data->$fto;
-            if(File::exists($image_path)) {
-                unlink($image_path);
+        $data2 = DokumenReview::where('id_review',$decrypt);
+
+        foreach ($data2->get() as $d) {
+             $dokumen = public_path()."/file/". $d->dokumen;
+            if(File::exists($dokumen)) {
+                unlink($dokumen);
             }
-            $i++;
         }
         $data->delete();
+        $data2->delete();
 
         Session::flash('success', $this->title . ' berhasil dihapus');
         return '/review';

@@ -228,11 +228,11 @@ class Pengajuan extends Model
     }
     public static function diagramFakultas(){
         return DB::table('users')
-            ->select(DB::raw('count(pengajuan.nidn) as jumlah'), 'fakultas.nama_fakultas')
+            ->select(DB::raw('count(pengajuan.nidn) as jumlah'), 'fakultas.nama_fakultas','fakultas.warna')
             ->join(DB::raw('(select nidn,id_fakultas from pengajuan group by nidn,id_fakultas) as pengajuan'), 'users.username', '=', 'pengajuan.nidn')
             ->join('fakultas', 'fakultas.id_fakultas', '=', 'pengajuan.id_fakultas')
 
-            ->groupBy('pengajuan.nidn','fakultas.nama_fakultas',)
+            ->groupBy('pengajuan.nidn','fakultas.nama_fakultas','fakultas.warna')
             ->get();
     }
     public static function diagramJabatan(){
@@ -243,5 +243,76 @@ class Pengajuan extends Model
     
             ->groupBy('pengajuan.jabatan_fungsional','pengajuan.nidn')
             ->get();
+    }
+
+
+    public static function lapPengajuan($request){
+         $x =  DB::table('pengajuan')
+            ->select('*','pengajuan.created_at','pengajuan.id_pengajuan',
+                    DB::raw('case pengajuan.status 
+                                        when 0 then "<p class=""text-warning"">New</p>"
+                                        when 1 then "<p class=""text-success"">In Review</p>"
+                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
+                                        when 4 then "<p class=""text-warning"">Revisi</p>"
+                                    end as status_staf'),
+                    DB::raw('case review.status 
+                                        when 0 then "<p class=""text-warning"">New</p>"
+                                        when 1 then "<p class=""text-success"">In Review</p>"
+                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
+                                        when 4 then "<p class=""text-warning"">Revisi</p>"
+                                    end as status_baak'),
+                    DB::raw('case review.status_dupak 
+                                        when 0 then "<p class=""text-warning"">New</p>"
+                                        when 1 then "<p class=""text-success"">In Review</p>"
+                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
+                                        when 4 then "<p class=""text-warning"">Revisi</p>"
+                                    end as status_dupak'),
+                    DB::raw('case review.status_pak 
+                                        when 0 then "<p class=""text-warning"">New</p>"
+                                        when 1 then "<p class=""text-success"">In Review</p>"
+                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
+                                        when 4 then "<p class=""text-warning"">Revisi</p>"
+                                    end as status_pak'),
+                    DB::raw('case review.status_sk 
+                                        when 0 then "<p class=""text-warning"">New</p>"
+                                        when 1 then "<p class=""text-success"">In Review</p>"
+                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
+                                        when 4 then "<p class=""text-warning"">Revisi</p>"
+                                    end as status_sk'),
+                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
+                    )
+            ->join('users', 'users.username', '=', 'pengajuan.nidn')
+            ->join('fakultas', 'fakultas.id_fakultas', '=', 'pengajuan.id_fakultas')
+            ->join('prodi', 'prodi.id_prodi', '=', 'pengajuan.id_prodi')
+            ->leftJoin('review', 'pengajuan.id_pengajuan', '=', 'review.id_pengajuan')
+            ->when( $request->from != null  && $request->to != null, function ($query)  use ($request){
+                return $query->whereBetween(DB::raw('DATE(pengajuan.created_at)'), [$request->from,$request->to]);
+            })
+            ->when( $request->fakultas != null , function ($query)  use ($request){
+                return $query->where('pengajuan.id_fakultas', $request->fakultas);
+            })
+            ->when( $request->status_staf != null , function ($query)  use ($request){
+                return $query->where('pengajuan.status', $request->status_staf);
+            })
+            ->when( $request->status_baak != null , function ($query)  use ($request){
+                return $query->where('review.status', $request->status_baak);
+            })
+            ->when( $request->status_dupak != null , function ($query)  use ($request){
+                return $query->where('review.status_dupak', $request->status_dupak);
+            })
+            ->when( $request->status_pak != null , function ($query)  use ($request){
+                return $query->where('review.status_pak', $request->status_pak);
+            })
+            ->when( $request->status_sk != null , function ($query)  use ($request){
+                return $query->where('review.status_sk', $request->status_sk);
+            })
+            ->get();
+        
+        return $x;
     }
 }

@@ -31,8 +31,8 @@
                                             <th>Username</th>
                                             <th>Email</th>
                                             <th>Nama</th>
-                                            <th>Fakultas</th>
                                             <th>Nomor Telfon</th>
+                                            <th>Fakultas</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>

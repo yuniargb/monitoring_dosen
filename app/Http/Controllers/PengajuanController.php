@@ -321,17 +321,16 @@ class PengajuanController extends Controller
         $decrypt = Crypt::decrypt($id);
         $data = Pengajuan::find($decrypt);
         
+        $data2 = DokumenPengajuan::where('id_pengajuan',$decrypt);
 
-        $i = 1;
-        while($i <= 4){
-            $fto = 'foto_'.$i;
-            $image_path = public_path()."/file/".$data->$fto;
-            if(File::exists($image_path)) {
-                unlink($image_path);
+        foreach ($data2->get() as $d) {
+             $dokumen = public_path()."/file/". $d->dokumen;
+            if(File::exists($dokumen)) {
+                unlink($dokumen);
             }
-            $i++;
         }
         $data->delete();
+        $data2->delete();
 
         Session::flash('success', $this->title . ' berhasil dihapus');
         return '/pengajuan';

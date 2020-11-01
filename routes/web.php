@@ -94,6 +94,8 @@ Route::group(['middleware' => ['auth','checkRole:1|2|3|4|5|6|7']], function () {
 });
 Route::group(['middleware' => ['auth','checkRole:1|2|3|4|5|6|7']], function () {
     Route::get('/review', 'ReviewController@index');
+    Route::get('/laporan', 'LaporanController@pengajuan');
+    Route::post('/cetaklaporanpengajuan', 'LaporanController@cetakPengajuan');
     Route::group(['prefix' => 'review'], function () {
     Route::get('/detailfile/{id}', 'ReviewController@detail');
     });

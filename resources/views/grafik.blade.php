@@ -47,7 +47,7 @@
                 </div>
                 <div class="card-body">
                     <div class="chart-bar">
-                        <canvas id="myBarChart2" data-x="{{ json_encode($x2) }}" data-y="{{ json_encode($y2) }}"></canvas>
+                        <canvas id="myBarChart2" data-l="{{ json_encode($l2) }}" data-x="{{ json_encode($x2) }}" data-y="{{ json_encode($y2) }}"></canvas>
                     </div>
                     <hr>
                 </div>
