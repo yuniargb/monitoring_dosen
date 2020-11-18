@@ -46,7 +46,15 @@
                     </div>
                     <div class="form-group">
                         <label for="jabatan_fungsional">Jabatan Fungsional</label>
-                        <input required  type="text" class="form-control" value="{{ !$type ? $data->jabatan_fungsional : ''}}" name="jabatan_fungsional" id="jabatan_fungsional">
+                        <select class="form-control" name="jabatan_fungsional" id="jabatan_fungsional" required>
+                            <option value="" disabled>Pilih Jabatan</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Tenaga Pengajar' ? 'selected' : '') : '' }}>Tenaga Pengajar</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Asisten Ahli' ? 'selected' : '') : '' }}>Asisten Ahli</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Lektor' ? 'selected' : '') : '' }}>Lektor</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Lektor Kepala' ? 'selected' : '') : '' }}>Lektor Kepala</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Guru Besar' ? 'selected' : '') : '' }}>Guru Besar</option>
+                            
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="id_fakultas">Fakultas</label>
@@ -74,11 +82,15 @@
                     $i = 'a';
                     while($i <= 'd'){
                         $ft = 'bidang_' . $i;
+
                     @endphp
                     <div class="form-group">
                         <label for="{{ $ft }}" class="text-capitalize">Bidang {{ $i }}</label>
-                        @if(!$type)
+                        
                             @if($ft == 'bidang_a')
+                                <small id="emailHelp" class="form-text text-muted">Ijazah, SK Mengajar, SK Sidang,Penguji KP & Skripsi, Buat buku, Modul, SK Jabatan Perguruan Tinggi, Materi Absen Dosen & Mahasiswa</small>
+                                @if(!$type)
+                                
                                 @foreach ($bidang_a as $b)
                                     <div class="row">
                                         <div class="col-md-10">
@@ -90,7 +102,10 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                @endif
                             @elseif($ft == 'bidang_b')
+                                <small id="emailHelp" class="form-text text-muted">Jurnal Nasional & Internasional, Buku Ilmiah</small>
+                                @if(!$type)
                                 @foreach ($bidang_b as $b)
                                     <div class="row">
                                         <div class="col-md-10">
@@ -102,7 +117,10 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                @endif
                             @elseif($ft == 'bidang_c')
+                                <small id="emailHelp" class="form-text text-muted">Surat Pelaksanaan Pengabdian pada masyarakat, surat tugas sertifikat pengabdian pada masyarakat</small>
+                                @if(!$type)
                                 @foreach ($bidang_c as $b)
                                     <div class="row">
                                         <div class="col-md-10">
@@ -114,7 +132,10 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                @endif
                             @elseif($ft == 'bidang_d')
+                                <small id="emailHelp" class="form-text text-muted">Penunjang tugas dosen, anggota organisasi profesi, menulis buku pelajaran SLTA, Prestasi Bidang Olahraga</small>
+                                @if(!$type)
                                 @foreach ($bidang_d as $b)
                                     <div class="row">
                                         <div class="col-md-10">
@@ -126,8 +147,8 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                @endif
                             @endif
-                        @endif
                         <input type="file" class="form-control" value="{{ !$type ? $data->$ft : ''}}" name="{{ $ft }}[]" {{ !$type ? '' : 'required'}}>
                     </div>
                     <div id="data-{{ $ft }}"></div>

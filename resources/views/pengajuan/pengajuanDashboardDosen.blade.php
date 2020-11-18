@@ -127,7 +127,8 @@
                                                     @case(3)
                                                          <p class="text-danger">Ditolak</p>
                                                          <br/>
-                                                         <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_review)) }})</p>
+                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_review)) }})</p>
+                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
                                                         @break
                                                     @case(4)
                                                          <p class="text-warning">Revisi</p>
@@ -147,12 +148,14 @@
                                                     @case(2)
                                                          <p class="text-success">Konfirmasi</p>
                                                          <br/>
-                                                         <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_dupak)) }})</p>
+                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_dupak)) }})</p>
+                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
                                                         @break
                                                     @case(3)
                                                          <p class="text-danger">Ditolak</p>
                                                          <br/>
-                                                         <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_dupak)) }})</p>
+                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_dupak)) }})</p>
+                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
                                                         @break
                                                     @case(4)
                                                          <p class="text-warning">Revisi</p>
@@ -172,7 +175,8 @@
                                                     @case(2)
                                                          <p class="text-success">Konfirmasi</p>
                                                          <br/>
-                                                         <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_pak)) }})</p>
+                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_pak)) }})</p>
+                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
                                                         @break
                                                     @case(3)
                                                          <p class="text-danger">Ditolak</p>
@@ -202,7 +206,8 @@
                                                     @case(3)
                                                          <p class="text-danger">Ditolak</p>
                                                          <br/>
-                                                         <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_sk)) }})</p>
+                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_sk)) }})</p>
+                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
                                                         @break
                                                     @case(4)
                                                          <p class="text-warning">Revisi</p>

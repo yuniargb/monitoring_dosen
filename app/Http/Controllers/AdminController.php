@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use File;
 use App\User;
+use App\Iklan;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -24,6 +25,22 @@ class AdminController extends Controller
     {
         $data = User::getAdmin();
         return view('admin.admin', compact('data'))->with('title', $this->title);
+    }
+    public function indexIklan()
+    {
+        $data = Iklan::find(1);
+        $this->title = 'Data Iklan';
+        return view('admin.formIklan', compact('data'))->with('title', $this->title);
+    }
+
+    public function updateIklan(Request $request, $id)
+    {
+        $decrypt = Crypt::decrypt($id);
+        $data = Iklan::find($decrypt);
+        $data->update($request->all());
+        $this->title = 'Data Iklan';
+        Session::flash('success', $this->title . ' berhasil diubah');
+        return Redirect::back();
     }
 
     public function create()

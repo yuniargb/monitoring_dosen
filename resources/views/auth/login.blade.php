@@ -65,6 +65,7 @@
                                     </a>
                                 </form>
                             </div>
+                            <marquee direction="right"><h4>{{ $data->isi_iklan }}</h4></marquee>
                         </div>
                     </div>
                 </div>

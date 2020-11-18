@@ -22,6 +22,10 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('/', 'DashboardController@dashboard');
 });
 Route::group(['prefix' => 'admin','middleware' => ['auth','checkRole:1']], function () {
+    Route::get('/iklan', 'AdminController@indexIklan');
+    Route::group(['prefix' => 'iklan','middleware' => ['auth','checkRole:1']], function () {
+        Route::put('/update/{id}', 'AdminController@updateIklan'); 
+    });
     // crud umum
     Route::get('/prodi', 'ProdiController@index');
     Route::group(['prefix' => 'prodi','middleware' => ['auth','checkRole:1']], function () {

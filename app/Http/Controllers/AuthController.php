@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Logo;
+use App\Iklan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +15,8 @@ class AuthController extends Controller
 {
     public function login()
     {
-        return view('auth.login');
+        $data = Iklan::find(1);
+        return view('auth.login', compact('data'));
     }
 
     public function loginpost(Request $request)

@@ -228,11 +228,10 @@ class Pengajuan extends Model
     }
     public static function diagramFakultas(){
         return DB::table('users')
-            ->select(DB::raw('count(pengajuan.nidn) as jumlah'), 'fakultas.nama_fakultas','fakultas.warna')
+            ->select(DB::raw('count(pengajuan.id_fakultas) as jumlah'), 'fakultas.nama_fakultas','fakultas.warna')
             ->join(DB::raw('(select nidn,id_fakultas from pengajuan group by nidn,id_fakultas) as pengajuan'), 'users.username', '=', 'pengajuan.nidn')
             ->join('fakultas', 'fakultas.id_fakultas', '=', 'pengajuan.id_fakultas')
-
-            ->groupBy('pengajuan.nidn','fakultas.nama_fakultas','fakultas.warna')
+            ->groupBy('pengajuan.id_fakultas','fakultas.nama_fakultas','fakultas.warna')
             ->get();
     }
     public static function diagramJabatan(){
@@ -241,7 +240,7 @@ class Pengajuan extends Model
             ->join('users', 'users.username', '=', 'pengajuan.nidn')
             ->join('fakultas', 'fakultas.id_fakultas', '=', 'pengajuan.id_fakultas')
     
-            ->groupBy('pengajuan.jabatan_fungsional','pengajuan.nidn')
+            ->groupBy('pengajuan.jabatan_fungsional')
             ->get();
     }
 

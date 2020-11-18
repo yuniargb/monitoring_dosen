@@ -18,11 +18,11 @@ class DashboardController extends Controller
     {
         $jabatan = Pengajuan::diagramJabatan();
         $fakultas = Pengajuan::diagramFakultas();
-        $x = [];
-        $y = [];
+        $x = ['Tenaga Pengajar', 'Asisten Ahli', 'Lektor', 'Lektor Kepala','Guru Besar'];
+        $y = [0,0,0,0,0];
         foreach ($jabatan as $d) {
-            array_push($x, $d->jabatan_fungsional);
-            array_push($y,$d->jumlah);
+            $y[array_search($d->jabatan_fungsional, $x)] = $d->jumlah;
+        
         }
         $x2 = [];
         $y2 = [];

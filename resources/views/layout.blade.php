@@ -106,6 +106,11 @@
                         <i class="fas fa-fw fa-folder-open"></i>
                         <span>Data Admin</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/iklan">
+                        <i class="fas fa-fw fa-folder-open"></i>
+                        <span>Data Iklan</span></a>
+                </li>
                 <hr class="sidebar-divider d-none d-md-block">
                 @endif
                 @if(auth()->user()->role == 1 || auth()->user()->role == 4 || auth()->user()->role == 2)
