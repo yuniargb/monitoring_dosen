@@ -76,8 +76,7 @@
                                                     data-target="#exampleModal">Download</button>
                                             </td>
                                             <td>{!! $sw->status_text !!}</td>
-                                            <td><p class="text-{{ $sw->umur <= 10 ? 'success' : ($sw->umur <= 20 ? 'warning' : 'danger') }}">{{ $sw->umur }} Hari</p></td>
-                                            
+                                            <td><p class="text-{{ $sw->umur <= 10 ? 'success' : ($sw->umur <= 20 ? 'warning' : 'danger') }}">{{ $sw->umur }} Hari</p></td>                                            
                                             <td>
                                                 @if(auth()->user()->role == 1 || auth()->user()->role == 4)
                                                     <div class="mx-3">

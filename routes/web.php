@@ -109,6 +109,7 @@ Route::group(['middleware' => ['auth','checkRole:1|2|3|4|5|6|7']], function () {
     Route::group(['prefix' => 'review','middleware' => ['auth','checkRole:1|2|3|5|6|7']], function () {
         Route::put('/konfirmasi/{id}', 'ReviewController@updateKonfirmasi');
         Route::get('/form/tolak/{id}', 'ReviewController@tolakForm');
+        Route::get('/form/konfirmasi/{id}', 'ReviewController@konfirmasiForm');
         Route::put('/tolak/{id}', 'ReviewController@updateTolak');
         Route::get('/konfirmasi', 'ReviewController@konfirmasiView');
         Route::get('/ditolak', 'ReviewController@tolakView');

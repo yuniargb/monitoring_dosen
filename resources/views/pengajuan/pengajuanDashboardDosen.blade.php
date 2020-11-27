@@ -33,9 +33,6 @@
                                             <th>Dokumen</th>
                                             <th>Status Staf</th>
                                             <th>Status BAAK</th>
-                                            <th>Status DUPAK</th>
-                                            <th>Status PAK</th>
-                                            <th>Status SK</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -79,6 +76,21 @@
                                                     data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/review/detailfile').'/'.$sw->id_review }}" data-toggle="modal"
                                                     data-target="#exampleModal">Review</button>
                                                 @endif
+                                                @if($sw->dupak != null)
+                                                <a href="{{url('/pengajuan/download')}}/{{$sw->dupak}}" class="btn btn-primary mb-2 btn-sm text-light" target="_blank">
+                                                Download Dupak
+                                                </a>
+                                                @endif
+                                                @if($sw->pak != null)
+                                                <a href="{{url('/pengajuan/download')}}/{{$sw->pak}}" class="btn btn-primary mb-2 btn-sm text-light" target="_blank">
+                                                Download PAK
+                                                </a>
+                                                @endif
+                                                @if($sw->sk != null)
+                                                <a href="{{url('/pengajuan/download')}}/{{$sw->sk}}" class="btn btn-primary mb-2 btn-sm text-light" target="_blank">
+                                                Download SK
+                                                </a>
+                                                @endif
                                             </td>
                                             <td>
                                                 @switch($sw->status)
@@ -89,7 +101,7 @@
                                                          <p class="text-success">In Review</p>
                                                         @break
                                                     @case(2)
-                                                         <p class="text-success">Konfirmasi</p>
+                                                         <p class="text-success">Ok</p>
                                                          <br/>
                                                          <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi)) }})</p>
                                                         @break
@@ -120,7 +132,7 @@
                                                          <p class="text-success">In Review</p>
                                                         @break
                                                     @case(2)
-                                                         <p class="text-success">Konfirmasi</p>
+                                                         <p class="text-success">Ok</p>
                                                          <br/>
                                                          <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_review)) }})</p>
                                                         @break
@@ -137,85 +149,7 @@
                                                         <p class="text-danger">Menunggu</p>
                                                 @endswitch
                                             </td>
-                                            <td>
-                                                @switch($sw->status_dupak)
-                                                    @case(0)
-                                                        <p class="text-warning">New</p>
-                                                        @break
-                                                    @case(1)
-                                                         <p class="text-success">In Review</p>
-                                                        @break
-                                                    @case(2)
-                                                         <p class="text-success">Konfirmasi</p>
-                                                         <br/>
-                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_dupak)) }})</p>
-                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
-                                                        @break
-                                                    @case(3)
-                                                         <p class="text-danger">Ditolak</p>
-                                                         <br/>
-                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_dupak)) }})</p>
-                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
-                                                        @break
-                                                    @case(4)
-                                                         <p class="text-warning">Revisi</p>
-                                                        @break
-                                                    @default
-                                                        <p class="text-danger">Menunggu</p>
-                                                @endswitch
-                                            </td>
-                                            <td>
-                                                @switch($sw->status_pak)
-                                                    @case(0)
-                                                        <p class="text-warning">New</p>
-                                                        @break
-                                                    @case(1)
-                                                         <p class="text-success">In Review</p>
-                                                        @break
-                                                    @case(2)
-                                                         <p class="text-success">Konfirmasi</p>
-                                                         <br/>
-                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_pak)) }})</p>
-                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
-                                                        @break
-                                                    @case(3)
-                                                         <p class="text-danger">Ditolak</p>
-                                                         <br/>
-                                                         <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_pak)) }})</p>
-                                                        @break
-                                                    @case(4)
-                                                         <p class="text-warning">Revisi</p>
-                                                        @break
-                                                    @default
-                                                        <p class="text-danger">Menunggu</p>
-                                                @endswitch
-                                            </td>
-                                            <td>
-                                                @switch($sw->status_sk)
-                                                    @case(0)
-                                                        <p class="text-warning">New</p>
-                                                        @break
-                                                    @case(1)
-                                                         <p class="text-success">In Review</p>
-                                                        @break
-                                                    @case(2)
-                                                         <p class="text-success">Konfirmasi</p>
-                                                         <br/>
-                                                         <p class="text-success">({{ date('d-m-Y',strtotime($sw->tanggal_konfirmasi_sk)) }})</p>
-                                                        @break
-                                                    @case(3)
-                                                         <p class="text-danger">Ditolak</p>
-                                                         <br/>
-                                                         <p class="text-danger">({{ date('d-m-Y',strtotime($sw->tanggal_tolak_sk)) }})</p>
-                                                         <p class="text-danger">Note : {{ $sw->pesan_revisi }}</p>
-                                                        @break
-                                                    @case(4)
-                                                         <p class="text-warning">Revisi</p>
-                                                        @break
-                                                    @default
-                                                        <p class="text-danger">Menunggu</p>
-                                                @endswitch
-                                            </td>
+                                           
                                         </tr>
                                         @endforeach
                                     </tbody>

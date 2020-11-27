@@ -143,6 +143,16 @@ class ReviewController extends Controller
         return view('review.formReview', compact('type','data'))->with('title', $this->title);
     }
 
+
+    public function konfirmasiForm($id)
+    {
+        $decrypt = Crypt::decrypt($id);
+        $data = Review::find($decrypt);
+        
+        $type = 2;
+        return view('review.formReview', compact('type','data'))->with('title', $this->title);
+    }
+
     public function update(Request $request, $id)
     {
         $decrypt = Crypt::decrypt($id);
@@ -229,36 +239,49 @@ class ReviewController extends Controller
         Session::flash('success', $this->title . ' berhasil ditolak');
         return redirect($request->prevUrl);
     }
+
+    function inputFileSK($field,$request,$newId){
+        $files = $request->file(strtolower($field));
+        $resorce = $files;
+        $name   = $resorce->getClientOriginalExtension();
+        $newName = uniqid() . "." . $name;
+        
+        $resorce->move(\base_path() . "/public/file/", $newName);
+        $arr2 = array(
+            strtolower($field) => $newName
+        );
+
+        $datass = Review::find($newId);
+        $datass->update($arr2);
+    }
+
+
     public function updateKonfirmasi(Request $request, $id)
     {
         $decrypt = Crypt::decrypt($id);
         $data = Review::find($decrypt);
         
-        if(auth()->user()->role == 5){
-            $data->status_dupak = 2;
-            $data->status_pak = 0;
-            $data->tanggal_konfirmasi_dupak = date('Y-m-d');
+        if($request->hasFile('dupak')){ 
             $bagian = 'DUPAK';
-        }else if(auth()->user()->role == 6){
-            $data->status_pak = 2;
-            $data->status_sk = 0;
-            $data->tanggal_konfirmasi_pak = date('Y-m-d');
+            $this->inputFileSK($bagian,$request,$decrypt);
+        }else if($request->hasFile('pak')){
             $bagian = 'PAK';
-        }else if(auth()->user()->role == 7){
-            $data->status_sk = 2;
-            $data->tanggal_konfirmasi_sk = date('Y-m-d');
+            $this->inputFileSK($bagian,$request,$decrypt);
+        }else if($request->hasFile('sk')){
             $bagian = 'SK';
-        }else{
-            $data->status = 2;
-            $data->status_dupak = 0;
+            $this->inputFileSK($bagian,$request,$decrypt);
             $data->tanggal_konfirmasi = date('Y-m-d');
-            $bagian = 'BAAK';
+            $data->status = 2;
+           
         }
-
         $data->update();
         $data2 = Pengajuan::find($data->id_pengajuan);
         $user = User::where('username',$data2->nidn)->first();
-        $massg = 'Review telah dikonfirm oleh '. $bagian;
+        if($bagian == 'SK'){
+            $user->jabatan_fungsional = $data2->jabatan_fungsional;
+            $user->update();
+        }
+        $massg = 'Data '. $bagian .' telah ditambahkan';
         Mail::send('email', ['nama' => $user->nama, 'pesan' => $massg], function ($message) use ($user)
         {
             $message->subject('Review');
@@ -267,8 +290,8 @@ class ReviewController extends Controller
         });
 
 
-        Session::flash('success', $this->title . ' berhasil dikonfirmasi');
-        return '/review';
+        Session::flash('success', $this->title . ' berhasil ditambahkan');
+        return redirect($request->prevUrl);
     }
 
     public function destroy($id)

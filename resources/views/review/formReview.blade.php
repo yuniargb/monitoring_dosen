@@ -7,7 +7,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-head-row">
-                    <div class="card-title">{{ $type ? 'Revisi' : 'Tolak'  }} {{ $title }}</div>
+                    <div class="card-title">{{ $type == 1 ? 'Revisi' : ($type == 2 ? 'Konfirmasi' : 'Tolak')  }} {{ $title }}</div>
                     <a href="{{ url()->previous() }}" class="btn btn-danger btn-sm">
                         <span class="btn-label">
                                 <i class="fas fa-chevron-left"></i>
@@ -26,13 +26,13 @@
                         </ul>
                     </div>
                 @endif
-                <form action="/review/{{ $type ? 'update/' . Crypt::encrypt($data->id_review) : 'tolak/'. Crypt::encrypt($data->id_review) }}" enctype="multipart/form-data"  method="post">
+                <form action="/review/{{ $type == 1 ? 'update/' . Crypt::encrypt($data->id_review) : ( $type == 2 ? 'konfirmasi/'. Crypt::encrypt($data->id_review) : 'tolak/'. Crypt::encrypt($data->id_review) )  }}" enctype="multipart/form-data"  method="post">
                     @csrf
                     @method('put')
                    
 
                     <input required type="hidden" class="form-control" value="{{ url()->previous() }}" name="prevUrl" id="prevUrl">
-                    @if($type)
+                    @if($type == 1)
                     
                        <div class="form-group">
                             <label for="basnat">BA SENAT</label>
@@ -51,6 +51,23 @@
                         </div>
                         <div id="data-ba_senat"></div>
                         <button class="btn btn-primary mb-1 btn-sm text-right btn-ba_senat" type="button"><i class="fas fa-plus"></i> Tambah BA SENAT</button>
+                    @elseif($type == 2)
+                        @if($data->dupak == null)
+                            <div class="form-group">
+                                <label for="dupak">DUPAK</label>
+                                <input required type="file" class="form-control" value="{{ !$type ? $data->dupak : ''}}" name="dupak" id="dupak">
+                            </div>
+                        @elseif($data->pak == null)
+                            <div class="form-group">
+                                <label for="pak">PAK</label>
+                                <input required type="file" class="form-control" value="{{ !$type ? $data->pak : ''}}" name="pak" id="pak">
+                            </div>
+                        @elseif($data->sk == null)
+                            <div class="form-group">
+                                <label for="sk">SK</label>
+                                <input required type="file" class="form-control" value="{{ !$type ? $data->sk : ''}}" name="sk" id="sk">
+                            </div>
+                        @endif
                     @else
                         <div class="form-group">
                             <label for="pesan_revisi">Pesan</label>

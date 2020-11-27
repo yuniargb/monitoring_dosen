@@ -54,7 +54,18 @@
                         <label for="no_telp">Nomor Telfon</label>
                         <input required type="text" class="form-control" value="{{ !$type ? $data->no_telp : ''}}" name="no_telp" id="no_telp">
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="jabatan_fungsional">Jabatan Fungsional</label>
+                        <select class="form-control" name="jabatan_fungsional" id="jabatan_fungsional" required>
+                            <option value="" disabled>Pilih Jabatan</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Tenaga Pengajar' ? 'selected' : '') : '' }}>Tenaga Pengajar</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Asisten Ahli' ? 'selected' : '') : '' }}>Asisten Ahli</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Lektor' ? 'selected' : '') : '' }}>Lektor</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Lektor Kepala' ? 'selected' : '') : '' }}>Lektor Kepala</option>
+                            <option {{ !$type ? ($data->jabatan_fungsional == 'Guru Besar' ? 'selected' : '') : '' }}>Guru Besar</option>
+                            
+                        </select>
+                    </div>                    
                     
                     <div class="modal-footer">
                         

@@ -112,7 +112,7 @@ class Pengajuan extends Model
                     DB::raw('case pengajuan.status 
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Konfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                         else "ditolak"
@@ -139,7 +139,7 @@ class Pengajuan extends Model
                     DB::raw('case pengajuan.status 
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Konfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                         else "ditolak"
@@ -251,38 +251,17 @@ class Pengajuan extends Model
                     DB::raw('case pengajuan.status 
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                     end as status_staf'),
                     DB::raw('case review.status 
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                     end as status_baak'),
-                    DB::raw('case review.status_dupak 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                    end as status_dupak'),
-                    DB::raw('case review.status_pak 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                    end as status_pak'),
-                    DB::raw('case review.status_sk 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                    end as status_sk'),
                     DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
                     )
             ->join('users', 'users.username', '=', 'pengajuan.nidn')

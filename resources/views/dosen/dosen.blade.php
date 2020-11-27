@@ -32,6 +32,7 @@
                                             <th>No</th>
                                             <th>NIDN</th>
                                             <th>Email</th>
+                                            <th>Jabatan</th>
                                             <th>Nama</th>
                                             <th>Nomor Telfon</th>
                                             @if(auth()->user()->role == 1)
@@ -45,6 +46,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $sw->username }}</td>
                                             <td>{{ $sw->email }}</td>
+                                            <td>{{ $sw->jabatan_fungsional }}</td>
                                             <td>{{ $sw->nama }}</td>
                                             <td>{{ $sw->no_telp }}</td>
                                             @if(auth()->user()->role == 1)

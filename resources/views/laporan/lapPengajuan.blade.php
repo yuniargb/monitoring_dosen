@@ -73,57 +73,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="status_dupak">Status DUPAK</label>
-                                    <select class="form-control" name="status_dupak" id="status_dupak">
-                                        <option value=""
-                                            {{ $req == null ? '' : $req->status_dupak == '' ? "selected" : "" }}>
-                                            Semua
-                                        </option>
-                                        <option value="2"
-                                            {{ $req == null ? '' : $req->status_dupak == '2' ? "selected" : "" }}>
-                                            Dikonfirmasi
-                                        </option>
-                                        <option value="3"
-                                            {{ $req == null ? '' : $req->status_dupak == '3' ? "selected" : "" }}>
-                                            Ditolak
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="status_pak">Status PAK</label>
-                                    <select class="form-control" name="status_pak" id="status_pak">
-                                        <option value=""
-                                            {{ $req == null ? '' : $req->status_pak == '' ? "selected" : "" }}>
-                                            Semua
-                                        </option>
-                                        <option value="2"
-                                            {{ $req == null ? '' : $req->status_pak == '2' ? "selected" : "" }}>
-                                            Dikonfirmasi
-                                        </option>
-                                        <option value="3"
-                                            {{ $req == null ? '' : $req->status_pak == '3' ? "selected" : "" }}>
-                                            Ditolak
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="status_sk">Status SK</label>
-                                    <select class="form-control" name="status_sk" id="status_sk">
-                                        <option value=""
-                                            {{ $req == null ? '' : $req->status_sk == '' ? "selected" : "" }}>
-                                            Semua
-                                        </option>
-                                        <option value="2"
-                                            {{ $req == null ? '' : $req->status_sk == '2' ? "selected" : "" }}>
-                                            Dikonfirmasi
-                                        </option>
-                                        <option value="3"
-                                            {{ $req == null ? '' : $req->status_sk == '3' ? "selected" : "" }}>
-                                            Ditolak
-                                        </option>
-                                    </select>
-                                </div>
+                            
                                 <div class="modal-footer col-md-12">
                                     <div class="modal-footer col-md-12">
                                         <button name="submit" type="submit" class="btn btn-success"

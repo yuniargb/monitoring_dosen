@@ -63,7 +63,22 @@
                                             <td>
                                                 <button class="btn btn-primary detail-bukti btn-sm mb-2"
                                                     data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/review/detailfile').'/'.$sw->id_review }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Download</button>
+                                                    data-target="#exampleModal">Download Pengajuan Fakultas</button>
+                                                    @if($sw->dupak != null)
+                                                    <a href="{{url('/pengajuan/download')}}/{{$sw->dupak}}" class="btn btn-primary btn-round btn-sm w-100 text-light mt-3" target="_blank">
+                                                    Download Dupak
+                                                    </a>
+                                                    @endif
+                                                    @if($sw->pak != null)
+                                                    <a href="{{url('/pengajuan/download')}}/{{$sw->pak}}" class="btn btn-primary btn-round btn-sm w-100 text-light mt-3" target="_blank">
+                                                    Download PAK
+                                                    </a>
+                                                    @endif
+                                                    @if($sw->sk != null)
+                                                    <a href="{{url('/pengajuan/download')}}/{{$sw->sk}}" class="btn btn-primary btn-round btn-sm w-100 text-light mt-3" target="_blank">
+                                                    Download SK
+                                                    </a>
+                                                    @endif
                                             </td>
                                             <td>{!! $sw->status_text !!}</td>
                                             <td><p class="text-{{ $sw->umur <= 10 ? 'success' : ($sw->umur <= 20 ? 'warning' : 'danger') }}">{{ $sw->umur }} Hari</p></td>
@@ -89,15 +104,18 @@
                                                 @endif
                                                 @if(auth()->user()->role == 1 || auth()->user()->role == 3 || auth()->user()->role == 5 || auth()->user()->role == 6 || auth()->user()->role == 7)
                                                     <div class="mx-3">
-                                                        
-                                                        <form action="/review/konfirmasi/{{ Crypt::encrypt($sw->id_review) }}"
+
+                                                        <!-- <form action="/review/konfirmasi/{{ Crypt::encrypt($sw->id_review) }}"
                                                             method="post" class="d-inline btn-confirm">
                                                             @csrf
                                                             @method('put')
                                                             <button type="submit" class="btn btn-success btn-sm">
                                                                 <i class="fas fa-check-circle"></i>
                                                             </button>
-                                                        </form>
+                                                        </form> -->
+                                                        <a href="/review/form/konfirmasi/{{ Crypt::encrypt($sw->id_review) }}" class="btn btn-success btn-round btn-sm">
+                                                            <i class="fas fa-check-circle"></i>
+                                                        </a>
                                                         <a href="/review/form/tolak/{{ Crypt::encrypt($sw->id_review) }}" class="btn btn-warning btn-round btn-sm">
                                                             <i class="fas fa-times-circle"></i>
                                                         </a>

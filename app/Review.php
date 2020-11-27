@@ -12,6 +12,9 @@ class Review extends Model
         'id_pengajuan',
         'status',
         'id_prodi',
+        'dupak',
+        'sk',
+        'pak',
         'pesan_revisi',
         'tanggal_tolak',
         'tanggal_konfirmasi'
@@ -22,54 +25,21 @@ class Review extends Model
     public static function getData($nidn = null,$fakultas = null,$role = null){
   
          return DB::table('pengajuan')
-            ->when( $role == 3 || $role == null , function ($query)  use ($nidn){
-                return $query->select('*',
-                    DB::raw('case review.status 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
-            ->when( $role == 5, function ($query)  use ($nidn){
-                return $query->select('*',
-                    DB::raw('case review.status_dupak 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
-            ->when( $role == 6, function ($query)  use ($nidn){
-                return $query->select('*',
-                    DB::raw('case review.status_pak
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
-            ->when( $role == 7 , function ($query)  use ($nidn){
-                return $query->select('*',
-                    DB::raw('case review.status_sk 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
+         ->select('*',
+                DB::raw('case 
+
+                review.status 
+                when 0 then "<p class=""text-warning"">New</p>"
+                when 1 AND review.dupak IS NULL then "<p class=""text-success"">In Review</p>"
+                when 1 AND review.pak IS NULL then "<p class=""text-success"">Waiting PAK</p>"
+                when 1 AND review.sk IS NULL then "<p class=""text-success"">Waiting SK</p>"
+                when 2 then "<p class=""text-success"">Ok</p>"
+                when 3 then "<p class=""text-danger"">Ditolak</p>"
+                when 4 then "<p class=""text-warning"">Revisi</p>"
+                else "ditolak"
+                                end as status_text'),
+                DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
+            )
             ->join('users', 'users.username', '=', 'pengajuan.nidn')
             ->join('fakultas', 'fakultas.id_fakultas', '=', 'pengajuan.id_fakultas')
             ->join('prodi', 'prodi.id_prodi', '=', 'pengajuan.id_prodi')
@@ -113,58 +83,17 @@ class Review extends Model
      public static function getDataKonfirmasi($nidn = null,$fakultas = null,$role = null){
       
          return DB::table('pengajuan')
-            ->when( $role == 3 || $role == null , function ($query)  use ($nidn){
-                return $query->select('*',
-                    DB::raw('case review.status 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
-            ->when( $role == 5, function ($query)  use ($nidn){
-                return $query->select('*','review.tanggal_konfirmasi_dupak as tanggal_konfirmasi',
-                    DB::raw('case review.status_dupak 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
-            ->when( $role == 6, function ($query)  use ($nidn){
-                return $query->select('*','review.tanggal_konfirmasi_pak as tanggal_konfirmasi',
-                    DB::raw('case review.status_pak
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
-            ->when( $role == 7 , function ($query)  use ($nidn){
-                return $query->select('*','review.tanggal_konfirmasi_sk as tanggal_konfirmasi',
-                    DB::raw('case review.status_sk 
-                                        when 0 then "<p class=""text-warning"">New</p>"
-                                        when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
-                                        when 3 then "<p class=""text-danger"">Ditolak</p>"
-                                        when 4 then "<p class=""text-warning"">Revisi</p>"
-                                        else "ditolak"
-                                    end as status_text'),
-                    DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur')
-                );
-            })
+         ->select('*',
+            DB::raw('case review.status 
+                        when 0 then "<p class=""text-warning"">New</p>"
+                        when 1 AND review.dupak IS NULL then "<p class=""text-success"">In Review</p>"
+                        when 1 AND review.pak IS NULL then "<p class=""text-success"">Waiting PAK</p>"
+                        when 1 AND review.sk IS NULL then "<p class=""text-success"">Waiting SK</p>"
+                        when 2 then "<p class=""text-success"">Ok</p>"
+                        when 3 then "<p class=""text-danger"">Ditolak</p>"
+                        when 4 then "<p class=""text-warning"">Revisi</p>"
+                            end as status_text'),
+            DB::raw('DATEDIFF(NOW(), pengajuan.created_at) AS umur'))
             ->join('users', 'users.username', '=', 'pengajuan.nidn')
             ->join('fakultas', 'fakultas.id_fakultas', '=', 'pengajuan.id_fakultas')
             ->join('prodi', 'prodi.id_prodi', '=', 'pengajuan.id_prodi')
@@ -207,7 +136,7 @@ class Review extends Model
                     DB::raw('case review.status 
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                         else "ditolak"
@@ -220,7 +149,7 @@ class Review extends Model
                     DB::raw('case review.status_dupak 
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                         else "ditolak"
@@ -233,7 +162,7 @@ class Review extends Model
                     DB::raw('case review.status_pak
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                         else "ditolak"
@@ -246,7 +175,7 @@ class Review extends Model
                     DB::raw('case review.status_sk 
                                         when 0 then "<p class=""text-warning"">New</p>"
                                         when 1 then "<p class=""text-success"">In Review</p>"
-                                        when 2 then "<p class=""text-success"">Dikonfirmasi</p>"
+                                        when 2 then "<p class=""text-success"">Ok</p>"
                                         when 3 then "<p class=""text-danger"">Ditolak</p>"
                                         when 4 then "<p class=""text-warning"">Revisi</p>"
                                         else "ditolak"

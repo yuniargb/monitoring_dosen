@@ -64,7 +64,22 @@
                                             <td>
                                                 <button class="btn btn-primary detail-bukti btn-sm mb-2"
                                                     data-download="{{url('/pengajuan/download')}}" data-url="{{ url('/review/detailfile').'/'.$sw->id_review }}" data-toggle="modal"
-                                                    data-target="#exampleModal">Download</button>
+                                                    data-target="#exampleModal">Download Pengajuan Fakultas</button>
+                                                    @if($sw->dupak != null)
+                                                    <a href="{{url('/pengajuan/download')}}/{{$sw->dupak}}" class="btn btn-primary btn-round btn-sm w-100 text-light mt-3" target="_blank">
+                                                    Download Dupak
+                                                    </a>
+                                                    @endif
+                                                    @if($sw->pak != null)
+                                                    <a href="{{url('/pengajuan/download')}}/{{$sw->pak}}" class="btn btn-primary btn-round btn-sm w-100 text-light mt-3" target="_blank">
+                                                    Download PAK
+                                                    </a>
+                                                    @endif
+                                                    @if($sw->sk != null)
+                                                    <a href="{{url('/pengajuan/download')}}/{{$sw->sk}}" class="btn btn-primary btn-round btn-sm w-100 text-light mt-3" target="_blank">
+                                                    Download SK
+                                                    </a>
+                                                    @endif
                                             </td>
                                             <td>{{ date('d-m-Y', strtotime($sw->tanggal_konfirmasi)) }}</td>
                                             <td>{!! $sw->status_text !!}</td>

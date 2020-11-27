@@ -49,33 +49,21 @@
     <tbody>
         @foreach($laporan as $sw)
         <tr>
-            <td rowspan="5">{{ $loop->iteration }}</td>
-            <td rowspan="5">{{ $sw->id_pengajuan }}</td>
-            <td rowspan="5">{{ date('d-m-Y', strtotime($sw->created_at)) }}</td>
-            <td rowspan="5">{{ $sw->nidn }}</td>
-            <td rowspan="5">{{ $sw->nama }}</td>
-            <td rowspan="5">{{ $sw->jabatan_fungsional }}</td>
-            <td rowspan="5">{{ $sw->nama_fakultas }}</td>
-            <td rowspan="5">{{ $sw->nama_prodi }}</td>
-            <td rowspan="5">{{ $sw->umur }}</td>
+            <td rowspan="2">{{ $loop->iteration }}</td>
+            <td rowspan="2">{{ $sw->id_pengajuan }}</td>
+            <td rowspan="2">{{ date('d-m-Y', strtotime($sw->created_at)) }}</td>
+            <td rowspan="2">{{ $sw->nidn }}</td>
+            <td rowspan="2">{{ $sw->nama }}</td>
+            <td rowspan="2">{{ $sw->jabatan_fungsional }}</td>
+            <td rowspan="2">{{ $sw->nama_fakultas }}</td>
+            <td rowspan="2">{{ $sw->nama_prodi }}</td>
+            <td rowspan="2">{{ $sw->umur }}</td>
             <td><b>Staff</b></td>
             <td>{!! $sw->status_staf !!}</td>
         </tr>
         <tr>
             <td><b>BAAK</b></td>
             <td>{!! $sw->status_baak !!}</td>
-        </tr>
-        <tr>
-            <td><b>DUPAK</b></td>
-            <td>{!! $sw->status_dupak !!}</td>
-        </tr>
-        <tr>
-            <td><b>PAK</b></td>
-            <td>{!! $sw->status_pak !!}</td>
-        </tr>
-        <tr>
-            <td><b>SK</b></td>
-            <td>{!! $sw->status_sk !!}</td>
         </tr>
         @endforeach
     </tbody>

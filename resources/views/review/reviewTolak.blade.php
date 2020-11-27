@@ -30,6 +30,7 @@
                                             <th>Pesan</th>
                                             <th>Tanggal Tolak</th>
                                             <th>Umur</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,14 +84,9 @@
                                                 @if(auth()->user()->role != 2 )
                                                     <div class="mx-3">
                                                         
-                                                        <form action="/review/konfirmasi/{{ Crypt::encrypt($sw->id_review) }}"
-                                                            method="post" class="d-inline btn-confirm">
-                                                            @csrf
-                                                            @method('put')
-                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="fas fa-check-circle"></i>
-                                                            </button>
-                                                        </form>
+                                                        <a href="/review/form/konfirmasi/{{ Crypt::encrypt($sw->id_review) }}" class="btn btn-success btn-round btn-sm">
+                                                            <i class="fas fa-check-circle"></i>
+                                                        </a>
                                                         <a href="/review/form/tolak/{{ Crypt::encrypt($sw->id_review) }}" class="btn btn-warning btn-round btn-sm">
                                                             <i class="fas fa-times-circle"></i>
                                                         </a>
